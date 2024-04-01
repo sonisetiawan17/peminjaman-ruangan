@@ -34,10 +34,6 @@
                 </div>
             </li>
         </ol>
-
-        <div>
-            <p>Jumlah pemohon hari ini : </p>
-        </div>
     </nav>
     <!-- end page-header -->
     <!-- begin row -->
@@ -47,10 +43,53 @@
             <!-- begin panel -->
             <div class="panel panel-inverse">
                 <!-- begin panel-heading -->
-                <div class="panel-heading" style="background-color: #ffffff;">
-                    <img src="{{ asset('/assets/img/auth/history.png') }}" alt="users" class="h-6 mr-2" />
-                    <h4 class="panel-title text-black">History Permohonan</h4>
+                <div class="panel-heading md:flex md:items-center md:justify-between" style="background-color: #ffffff;">
+                    <div class="flex items-center gap-2 ">
+                        <img src="{{ asset('/assets/img/auth/history.png') }}" alt="users" class="h-6 mr-2" />
+                        <h4 class="panel-title text-black">History Permohonan</h4>
+                    </div>
+
+                    <div class="mt-[12px] md:mt-0">
+                        <a href="#modal-dialog" data-toggle="modal">
+                            <button class="px-4 py-2 shadow-sm border border-neutral-400 focus:border-none text-black">
+                                <i class="fa fa-filter mr-1"></i>Filter
+                            </button>
+                        </a>
+                    </div>
                 </div>
+
+                <div class="modal fade" id="modal-dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Filter Berdasarkan Range Waktu</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="GET" action="{{ route('superadmin.history.filter') }}">
+                                    @csrf
+                                    <div class="form-group row m-b-15">
+                                        <label class="col-md-5 col-form-label">Dari Tanggal</label>
+                                        <div class="col-md-7">
+                                            <input required name="start_date" type="date"
+                                                class="form-control form-input text-small" />
+                                        </div>
+                                        <label class="col-md-5 col-form-label mt-3">Sampai Tanggal</label>
+                                        <div class="col-md-7 mt-3">
+                                            <input required name="end_date" type="date"
+                                                class="form-control form-input text-small" />
+                                        </div>
+                                    </div>
+                            </div>
+                            <div class="modal-footer">
+                                <a href="javascript:;" class="button-ghost" data-dismiss="modal">Tutup</a>
+                                <button type="submit" class="button-primary">Cek Data</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- end panel-heading -->
                 <!-- begin panel-body -->
                 <div class="panel-body">
@@ -106,6 +145,9 @@
                                                 @elseif ($p->status_permohonan == 'Diterima')
                                                 <div class="flex flex-col justify-center rounded-full overflow-hidden bg-green-500 text-xs text-white text-center whitespace-nowrap transition duration-500"
                                                     style="width: 100%"></div>
+                                                @elseif ($p->status_permohonan == 'Batal')
+                                                <div class="flex flex-col justify-center rounded-full overflow-hidden bg-gray-800 text-xs text-white text-center whitespace-nowrap transition duration-500"
+                                                    style="width: 100%"></div>
                                                 @else 
                                                 <div class="flex flex-col justify-center rounded-full overflow-hidden bg-red-500 text-xs text-white text-center whitespace-nowrap transition duration-500"
                                                     style="width: 100%"></div>
@@ -129,16 +171,20 @@
                                                 data-id_permohonan="{{ $p->id_permohonan }}" type="button"
                                                 class="btn btn-red btn-xs" placholder="Tolak Permohonan"><i
                                                     style="font-size:100%" class="fa fa-times text-white"></i></a> --}}
-                                            <a id="modal_show" href="#" data-toggle="modal" data-target="#modal-acc"
+                                            @if ($p->status_permohonan == 'Batal')
+                                                <span>-</span>
+                                            @else
+                                                <a id="modal_show" href="#" data-toggle="modal" data-target="#modal-acc"
                                                 data-id_permohonan="{{ $p->id_permohonan }}" type="button"
                                                 class="bg-green-500 hover:bg-green-500/70 transition px-[10px] py-[3px] rounded-sm"
                                                 placholder="Terima Permohonan"><i style="font-size:75%"
                                                     class="fa fa-check text-white"></i></a>
-                                            <a id="modal_show" href="#" data-toggle="modal" data-target="#modal-tolak"
+                                                <a id="modal_show" href="#" data-toggle="modal" data-target="#modal-tolak"
                                                 data-id_permohonan="{{ $p->id_permohonan }}" type="button"
                                                 class="bg-red-500 hover:bg-red-500/70 transition px-[11px] py-[3px] rounded-sm"
                                                 placholder="Tolak Permohonan"><i style="font-size:75%"
                                                     class="fa fa-times text-white"></i></a>
+                                            @endif
                                         </div>
                                     </td>
                                     <td>

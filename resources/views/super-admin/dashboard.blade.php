@@ -13,7 +13,7 @@
     @php 
         $dataFasilitas = $fasilitas;
         $statistikPermohonan = $statsPermohonan;
-        $statistikBidangKegiatan = $statsBidangKegiatan;
+        $statistikInstansi = $statsInstansi;
     @endphp 
 
     <div>
@@ -25,7 +25,7 @@
                         <i class="fa fa-filter mr-1"></i>Filter
                     </button>
                 </a>
-                <select class="form-input text-sm ml-2" name="skpd">
+                {{-- <select class="form-input text-sm ml-2" name="skpd">
                     <option disabled selected>Semua Waktu</option>
                     <option value="skpd">Hari Ini</option>
                     <option value="non_skpd">7 Hari Terakhir</option>
@@ -33,7 +33,7 @@
                     <option value="non_skpd">3 Bulan Terakhir</option>
                     <option value="non_skpd">6 Bulan Terakhir</option>
                     <option value="non_skpd">1 Tahun Terakhir</option>
-                </select>
+                </select> --}}
             </div>
         </div>
 
@@ -133,7 +133,7 @@
                 <canvas id="barChart" height="150px"></canvas>
             </div>
             <div class="col-span-1 bg-white border border-neutral-500 rounded-lg p-7">
-                <h1 class="font-semibold text-xl mb-5">Bidang Kegiatan Terbanyak</h1>
+                <h1 class="font-semibold text-xl mb-5">Instansi Terbanyak</h1>
                 <canvas id="dougnutChart" height="150px"></canvas>
             </div>
         </div>
@@ -166,7 +166,7 @@
     <script>
         const fasilitas = @json($dataFasilitas);
         const statistikPermohonan = @json($statistikPermohonan);
-        const statistikBidangKegiatan = @json($statistikBidangKegiatan);
+        const statistikInstansi = @json($statistikInstansi);
         const barctx = document.getElementById('barChart');
 
         const jumlahPermohonan = Array(fasilitas.length).fill(0);
@@ -200,23 +200,23 @@
         });
 
         const dougnutctx = document.getElementById('dougnutChart');
-        const labelBidang = statistikBidangKegiatan.map(item => item.nama_bidang);
-        const jumlahPermohonanBidang = statistikBidangKegiatan.map(item => item.jumlah_permohonan);
+        const labelInstansi = statistikInstansi.map(item => item.bidang_kegiatan);
+        const jumlahPermohonanInstansi = statistikInstansi.map(item => item.jumlah_permohonan);
 
         new Chart(dougnutctx, {
             type: 'doughnut',
             data: {
-                labels: labelBidang,
-            datasets: [{
-                label: 'Jumlah Permohonan',
-                data: jumlahPermohonanBidang,
-                backgroundColor: [
-                'rgb(0, 168, 232)',
-                'rgb(239, 35, 60)',
-                'rgb(128, 237, 153)'
-                ],
-                hoverOffset: 4,
-            }]
+                labels: labelInstansi,
+                datasets: [{
+                    label: 'Jumlah Permohonan',
+                    data: jumlahPermohonanInstansi,
+                    backgroundColor: [
+                    'rgb(0, 168, 232)',
+                    'rgb(239, 35, 60)',
+                    'rgb(128, 237, 153)'
+                    ],
+                    hoverOffset: 4,
+                }]
             },
             options: {
                 plugins: {

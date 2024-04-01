@@ -132,24 +132,16 @@
                     <p class="pt-2 text-neutral-500">{{ $user->nik }}</p>
                 </div>
                 <div class="">
-                    <h3 class="font-medium">Alamat</h3>
-                    <p class="pt-2 text-neutral-500">{{ $user->alamat }}</p>
-                </div>
-                <div class="">
                     <h3 class="font-medium">No Telepon</h3>
                     <p class="pt-2 text-neutral-500">{{ $user->no_telp }}</p>
                 </div>
                 <div class="">
                     <h3 class="font-medium">Instansi</h3>
-                    <p class="pt-2 text-neutral-500">{{ $user->instansi->nama_instansi }}</p>
+                    <p class="pt-2 text-neutral-500">{{ $user->instansi_id === 21 ? $user->nama_instansi : $user->instansi->nama_instansi }}</p>
                 </div>
                 <div class="">
                     <h3 class="font-medium">Alamat Instansi</h3>
-                    <p class="pt-2 text-neutral-500">{{ $user->instansi->alamat_instansi }}</p>
-                </div>
-                <div class="">
-                    <h3 class="font-medium">Nama Organisasi</h3>
-                    <p class="pt-2 text-neutral-500">{{ $user->nama_organisasi }}</p>
+                    <p class="pt-2 text-neutral-500">{{ $user->alamat_instansi }}</p>
                 </div>
             </div>
         </div>

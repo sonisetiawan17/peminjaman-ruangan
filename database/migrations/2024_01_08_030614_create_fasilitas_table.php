@@ -18,6 +18,8 @@ class CreateFasilitasTable extends Migration
             $table->string('nama_fasilitas');
             $table->string('kapasitas');
             $table->string('lokasi');
+            $table->string('fasilitas');
+            $table->string('waktu_pemanfaatan');
             $table->text('file')->nullable();
             $table->string('nama')->nullable();
             $table->string('extension')->nullable();

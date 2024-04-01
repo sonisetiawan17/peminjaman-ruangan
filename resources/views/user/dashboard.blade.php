@@ -1,5 +1,7 @@
 @extends('layouts.landing')
 
+@section('title', 'Beranda - Sistem Informasi Peminjaman Ruangan')
+
 @section('content')
 
 @php 
@@ -7,16 +9,16 @@
 @endphp
 
 <main class="bg-[#fefefe]">
-    <div class="relative h-screen md:h-1/2 lg:h-screen bg-center bg-cover w-full" style="background-image: url('{{ asset('/assets/img/auth/desktop.jpg') }}');">
+    <div class="relative h-screen md:h-[700px] lg:h-screen bg-center bg-cover w-full" style="background-image: url('{{ asset('/assets/img/auth/desktop.jpg') }}');">
         {{-- <div class="absolute top-0 bg-center bg-cover w-full h-screen z-0 md:hidden lg:block bg-gray-300/30">
         </div> --}}
 
-        <div class="heading lg:absolute z-10 lg:top-1/2 lg:left-1/2 lg:transform lg:-translate-x-1/2 lg:-translate-y-1/2 lg:w-[70%]">
+        <div class="heading md:absolute z-10 md:top-1/2 md:left-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 md:w-[70%]">
             <div class="flex justify-center">
                 <span class="py-1.5 px-3 rounded-full text-xs font-medium bg-gray-200 text-gray-800 ">Sistem Informasi Peminjaman Ruangan</span>
             </div>
             <div class="mt-5 mx-4 lg:mx-0">
-                <h1 class="font-bold text-4xl lg:text-5xl xl:text-6xl text-center leading-snug lg:leading-none">Booking Room Reservations <span class="md:block md:pt-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-transparent bg-clip-text h-[85px]">Easily and Efficiently</span></h1>
+                <h1 class="font-bold text-4xl lg:text-5xl xl:text-6xl text-center leading-snug lg:leading-none">Booking Room Reservations <span class="md:block md:pt-3 bg-gradient-to-r from-[#21D4FD] to-[#B721FF] text-transparent bg-clip-text h-[85px]">Easily and Efficiently</span></h1>
                 <p class="hidden md:block pt-4 font-semibold text-lg text-center">SIPIRANG menawarkan berbagai manfaat, seperti menghemat waktu, <span class="block pt-2"> meningkatkan efisiensi, dan mengurangi risiko kesalahan.</span></p>
                 <p class="md:hidden pt-4 font-semibold text-sm text-center">SIPIRANG menawarkan berbagai manfaat, seperti menghemat waktu, <span class="block pt-1"> meningkatkan efisiensi, dan mengurangi risiko kesalahan.</span></p>
             </div>
@@ -31,52 +33,103 @@
             </div>
         </div>
 
-        <div class="absolute bottom-0 bg-center bg-cover w-full h-[30%] z-0 md:hidden lg:block" style="background: linear-gradient(transparent 0%, #fefefe 100%);">
+        <div class="absolute bottom-0 bg-center bg-cover w-full h-[30%] z-0 lg:block" style="background: linear-gradient(transparent 0%, #fefefe 100%);">
         </div>            
     </div>
 
-    <div class="bg-[#fefefe] md:pt-[150px] lg:pt-0 px-[8px] md:px-[50px] lg:px-32">
-        {{-- <div class="w-full h-[2px] bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-500 relative">
-            <div class="absolute left-0 transform -translate-y-1/2 w-[20%] lg:w-[40%] h-[50px]" style="background: linear-gradient(270deg, transparent 0%, #eff3fb 75%);"></div>
-            <div class="absolute right-0 transform -translate-y-1/2 w-[20%] lg:w-[40%] h-[50px]" style="background: linear-gradient(90deg, transparent 0%, #eff3fb 75%);"></div>
-        </div> --}}
+    <div class="bg-[#fefefe] md:pt-[80px] lg:pt-0 px-[8px] md:px-[50px] lg:px-32">
         <div class="mt-5 text-center">
-            <h1 class="text-xl uppercase font-semibold tracking-widest bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">Pilih Ruangan</h1>
+            <h1 class="text-base md:text-xl uppercase font-semibold tracking-widest bg-gradient-to-r from-[#21D4FD] to-[#B721FF] text-transparent bg-clip-text">Daftar Ruangan dan Area</h1>
+            <h1 class="mt-4 text-2xl md:text-4xl lg:text-5xl font-bold text-neutral-600">MPP Kota Cimahi</h1>
         </div>
 
-        <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div class="mt-24 flex flex-col">
             @foreach ($fasilitas as $item)
-            <div id="modal_show" type="button" data-toggle="modal" data-target="{{ in_array($currentDate, $item->range_tanggal) && in_array($item->id_fasilitas, $item->range_tanggal) ? ' ' : '#isimodal' }}" data-id_fasilitas="{{ $item->id_fasilitas }}" data-nama_fasilitas="{{ $item->nama_fasilitas }}" data-file="{{ $item->file }}" class="relative bg-[#f2f5fa] border shadow-sm rounded-xl w-full mt-3 cursor-pointer {{ in_array($currentDate, $item->range_tanggal) && in_array($item->id_fasilitas, $item->range_tanggal) ? ' ' : 'transition-all duration-300 hover:transform hover:-translate-y-4 hover:transition-all hover:duration-300' }}" style="padding: 12px">
-                <div class="card-content text-center">
-                    <div class="flex items-center justify-center gap-3">
-                        <img src="{{ asset('/assets/img/auth/room.png') }}" class="h-7" />
-                        <h3 class="font-bold text-[#0d34cd]" style="font-size: 19px">
-                            {{ $item->nama_fasilitas }}
-                        </h3>
-                    </div>
-                    <p class="mt-4 text-gray-600">
-                        <span class="font-semibold">Location</span> : Mal Pelayanan Publik, Kota Cimahi, {{ $item->lokasi }}.
-                    </p>
-                    <p class="mt-1 text-gray-600">
-                        <span class="font-semibold">Room Capacity</span> : {{ $item->kapasitas }} orang.
-                    </p>
-                </div>
-                <img class="w-full h-[220px] lg:h-[200px] xl:h-[220px] bg-cover bg-center rounded-xl image-border mt-2" src="/foto_fasilitas/{{ $item->file }}" alt="Ruangan">
+            <div class="md:grid md:grid-cols-[45%,1fr] md:gap-5 lg:gap-10 px-[8px] md:px-0">
+                <div class="rounded-2xl h-fit hidden md:block relative">
+                    <img src="{{ $item->file }}" alt="ruangan" class="w-full md:h-[180px] lg:h-[350px] bg-cover bg-center rounded-2xl" />
+                    {{-- <img src="/foto_fasilitas/{{ $item->file }}" alt="ruangan" class="w-full md:h-[180px] lg:h-[350px] bg-cover bg-center rounded-2xl" /> --}}
 
-                @if (in_array($currentDate, $item->range_tanggal) && in_array($item->id_fasilitas, $item->range_tanggal))
-                <div class="absolute top-0 left-0 w-full h-full bg-[#000814]/80 bg-blend-multiply rounded-xl flex flex-col items-center justify-center text-white px-[30px]">
-                    <div class="flex items-center justify-center gap-2 text-lg pb-2 border-b-2 border-b-white w-full">
-                        <i class="fa-solid fa-circle-info text-white"></i>
-                        <p class="text-white">Informasi</p>
+                    @if (in_array($currentDate, $item->range_tanggal) && in_array($item->id_fasilitas, $item->range_tanggal))
+                    <div class="absolute top-0 left-0 w-full h-full bg-[#000814]/80 bg-blend-multiply rounded-xl flex flex-col items-center justify-center text-white px-[30px]">
+                        <div class="flex items-center justify-center gap-2 text-lg pb-2 border-b-2 border-b-white w-full">
+                            <i class="fa-solid fa-circle-info text-white"></i>
+                            <p class="text-white">Informasi</p>
+                        </div>
+                        <div class="mt-3 text-center">
+                            <p>Mohon maaf, ruangan ini sedang dalam proses <span class="lowercase">{{ $item->range_tanggal[1] }}</span> mulai tanggal</p>
+                            <p class="mt-3"><span class="font-bold pr-1">{{ \Carbon\Carbon::parse($item->range_tanggal[2])->format('d F Y') }}</span> s/d <span class="font-bold pl-1">{{ \Carbon\Carbon::parse(end($item->range_tanggal))->format('d F Y') }}</span></p>
+                        </div>
                     </div>
-                    <div class="mt-3 text-center">
-                        <p>Mohon maaf, ruangan ini sedang dalam proses <span class="lowercase">{{ $item->range_tanggal[1] }}</span> mulai tanggal</p>
-                        <p class="mt-3"><span class="font-bold pr-1">{{ \Carbon\Carbon::parse($item->range_tanggal[2])->format('d F Y') }}</span> s/d <span class="font-bold pl-1">{{ \Carbon\Carbon::parse(end($item->range_tanggal))->format('d F Y') }}</span></p>
+                    @endif
+                </div>
+                <div>
+                    <div class="flex gap-5 md:gap-5 lg:gap-10">
+                        <div class="relative">
+                            <div class="{{ $item->id_fasilitas === 1 ? 'px-[16px]' : 'px-[14px]' }} py-2 rounded-full bg-primary z-10">
+                                <span class="text-white font-semibold">{{ $item->id_fasilitas }}</span>
+                            </div>
+                            <div class="border-r-2 border-gray-300 h-full {{ $item->id_fasilitas === 7 ? 'hidden' : 'absolute top-[35px] left-1/2 z-0' }}"></div>
+                        </div>
+                        <div class="pb-20 md:pb-40">
+                            <div class="rounded-2xl h-fit mb-[12px] md:hidden relative">
+                                <img src="{{ $item->file }}" alt="ruangan" class="w-full h-[200px] bg-cover bg-center rounded-2xl" />
+                                {{-- <img src="/foto_fasilitas/{{ $item->file }}" alt="ruangan" class="w-full h-[200px] bg-cover bg-center rounded-2xl" /> --}}
+                                @if (in_array($currentDate, $item->range_tanggal) && in_array($item->id_fasilitas, $item->range_tanggal))
+                                <div class="absolute top-0 left-0 w-full h-full bg-[#000814]/80 bg-blend-multiply rounded-xl flex flex-col items-center justify-center text-white px-[30px] md:hidden">
+                                    <div class="flex items-center justify-center gap-2 text-lg pb-2 border-b-2 border-b-white w-full">
+                                        <i class="fa-solid fa-circle-info text-white"></i>
+                                        <p class="text-white">Informasi</p>
+                                    </div>
+                                    <div class="mt-3 text-center">
+                                        <p>Mohon maaf, ruangan ini sedang dalam proses <span class="lowercase">{{ $item->range_tanggal[1] }}</span> mulai tanggal</p>
+                                        <p class="mt-3"><span class="font-bold pr-1">{{ \Carbon\Carbon::parse($item->range_tanggal[2])->format('d F Y') }}</span> s/d <span class="font-bold pl-1">{{ \Carbon\Carbon::parse(end($item->range_tanggal))->format('d F Y') }}</span></p>
+                                    </div>
+                                </div>
+                                @endif
+                            </div>
+                            <?php
+                                $str = $item->nama_fasilitas;
+                                $words = explode(' ', $str); 
+
+                                echo "<h1 class='font-bold text-black text-xl lg:text-4xl'>";
+                                $gradientText = '';
+                                foreach ($words as $index => $word) {
+                                    if ($index == 0) {
+                                        echo $word;
+                                    } else {
+                                        $gradientText .= "$word ";
+                                    }
+                                }
+
+                                echo "<span class='bg-gradient-to-r from-[#21D4FD] to-[#B721FF] text-transparent bg-clip-text'> $gradientText</span></h1>";
+                            ?>
+
+                            <div class="mt-3 flex flex-col gap-1 text-sm lg:text-base">
+                                <p><span class="font-semibold">Kapasitas Ruangan</span> : {{ $item->kapasitas }} Orang</p>
+                                <p><span class="font-semibold">Lokasi Ruangan</span> : {{ $item->lokasi }} Mal Pelayanan Publik Kota Cimahi</p>
+                                <p><span class="font-semibold">Fasilitas</span> : {{ $item->fasilitas }}</p>
+                                <div class="flex flex-col gap-2 mt-4">
+                                    <p>Waktu pemanfaatan ruangan yaitu setiap hari {{ $item->waktu_pemanfaatan }} pada pukul 08:00 - 15.30</p>
+                                    <p><span class="font-semibold">Catatan</span> : Di luar waktu tersebut jam tersebut di atas,  kebersihan dan keamanan tidak menjadi tanggung jawab pengelola MPP Kota Cimahi</p>
+                                </div>
+                                <div class="mt-3" id="modal_show" type="button" data-toggle="modal" data-target="{{ in_array($currentDate, $item->range_tanggal) && in_array($item->id_fasilitas, $item->range_tanggal) ? ' ' : '#isimodal' }}" data-id_fasilitas="{{ $item->id_fasilitas }}" data-nama_fasilitas="{{ $item->nama_fasilitas }}" data-file="{{ $item->file }}">
+                                    @if (in_array($currentDate, $item->range_tanggal) && in_array($item->id_fasilitas, $item->range_tanggal))
+                                    <button class="bg-gradient-to-t  from-gray-800 to-gray-500 text-small rounded-lg text-white px-7 py-2 w-full md:w-fit font-semibold cursor-not-allowed" disabled>Pilih Ruangan</button>
+                                    @else 
+                                    <button class="bg-gradient-to-t from-primary to-blue-500 text-small rounded-lg text-white px-7 py-2 w-full md:w-fit font-semibold">Pilih Ruangan</button>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                @endif 
             </div>
             @endforeach
+        </div>
+        <div class="w-full h-[2px] bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-500 relative">
+            <div class="absolute left-0 transform -translate-y-1/2 w-[20%] lg:w-[40%] h-[50px]" style="background: linear-gradient(270deg, transparent 0%, #fefefe 75%);"></div>
+            <div class="absolute right-0 transform -translate-y-1/2 w-[20%] lg:w-[40%] h-[50px]" style="background: linear-gradient(90deg, transparent 0%, #fefefe 75%);"></div>
         </div>
 
         <div class="modal fade" id="isimodal">
@@ -207,17 +260,17 @@
             jam.innerHTML = '';
 
             if (isDateInCurrentDate) {
-                for (let i = 8; i <= 16; i++) {
+                for (let i = 8; i <= 15; i++) {
                     const value = i.toString();
                     const isUsed = newArray.includes(value);
                     const labelClass = isUsed
                         ? 'inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-red-500/20 disabled cursor-not-allowed text-red-800'
-                        : 'inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 cursor-pointer';
+                        : 'inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-teal-100 text-teal-800 cursor-pointer';
 
                     jam.innerHTML +=
                         `<label class="${labelClass} mr-1" id="${value}-jam_mulai">
                             <input type="radio" name="jam_mulai" value="${value}" id="${value}" onclick="getValue()" ${isUsed ? 'disabled' : ''} required />
-                            ${value}:00
+                            ${value}:${value == 15 ? '30' : '00'}
                         </label>`;
                 }
             } 
@@ -229,12 +282,12 @@
 
             jam.innerHTML = '';
 
-            for (let i = 8; i <= 16; i++) {
+            for (let i = 8; i <= 15; i++) {
                 const value = i.toString();
                 jam.innerHTML +=
                     `<label class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-teal-100 text-teal-800 cursor-pointer mr-1" id="${value}-jam_mulai">
                         <input type="radio" name="jam_mulai" value="${value}" id="${value}" onclick="getValue()" required />
-                        ${value}:00
+                        ${value}:${value == 15 ? '30' : '00'}
                     </label>`;
             }
         }
@@ -245,12 +298,12 @@
     function getValue() {
         const radioButton = document.getElementsByName("jam_mulai");
 
-        for (let i = 8; i <= 16; i++) {
+        for (let i = 8; i <= 15; i++) {
             const value = i.toString();
             const labelElement = document.getElementById(`${value}-jam_mulai`);
 
             if (radioButton[i - 8].checked && labelElement.classList.contains('cursor-pointer')) {
-                for (let j = 8; j <= 16; j++) {
+                for (let j = 8; j <= 15; j++) {
                     const currentLabel = document.getElementById(`${j}-jam_mulai`);
                     currentLabel.style.backgroundColor = (i === j) ? 'yellow' : '';
                 }
@@ -320,7 +373,7 @@
             jam.innerHTML = '';
 
             if (isDateInCurrentDate) {
-                for (let i = 8; i <= 16; i++) {
+                for (let i = 8; i <= 15; i++) {
                     const value = i.toString();
                     const isUsed = newArray.includes(value);
                     const labelClass = isUsed
@@ -330,7 +383,7 @@
                     jam.innerHTML +=
                         `<label class="${labelClass} mr-1" id="${value}-jam_selesai">
                             <input type="radio" name="jam_selesai" value="${value}" id="${value}" onclick="getValueSelesai()" ${isUsed ? 'disabled' : ''} required />
-                            ${value}:00
+                            ${value}:${value == 15 ? '30' : '00'}
                         </label>`;
                 }
             } 
@@ -342,12 +395,12 @@
 
             jam.innerHTML = '';
 
-            for (let i = 8; i <= 16; i++) {
+            for (let i = 8; i <= 15; i++) {
                 const value = i.toString();
                 jam.innerHTML +=
                     `<label class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-teal-100 text-teal-800 cursor-pointer mr-1" id="${value}-jam_selesai">
                         <input type="radio" name="jam_selesai" value="${value}" id="${value}" onclick="getValueSelesai()" required />
-                        ${value}:00
+                        ${value}:${value == 15 ? '30' : '00'}
                     </label>`;
             }
         }
@@ -358,7 +411,7 @@
     function getValueSelesai() {
         const radioButton = document.getElementsByName("jam_selesai");
 
-        for (let i = 8; i <= 16; i++) {
+        for (let i = 8; i <= 15; i++) {
             const value = i.toString();
             const labelElement = document.getElementById(`${value}-jam_selesai`);
 

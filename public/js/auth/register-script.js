@@ -95,22 +95,22 @@ password_confirmation.addEventListener("input", function (event) {
 const nik = document.getElementById("nik");
 const no_telp = document.getElementById("no_telp");
 const nama_instansi = document.getElementById("nama_instansi");
-const nama_organisasi = document.getElementById("nama_organisasi");
+const alamat_instansi = document.getElementById("alamat_instansi");
 const instansi = document.getElementById("instansi_id");
 const buttonRegister = document.querySelector(".btn-submit");
 
 function checkAndChangeButtonColorStep(
     userNik,
     userNoTelp,
-    userNamaOrganisasi,
+    userAlamatInstansi,
     userInstansi
 ) {
     const isNik = userNik.length > 1;
     const isNoTelp = userNoTelp.length > 1;
-    const isNamaOrganisasi = userNamaOrganisasi.length > 0;
+    const isAlamatInstansi = userAlamatInstansi.length > 1;
     const isInstansi = userInstansi.length > 0;
 
-    if (isNik && isNoTelp && isNamaOrganisasi && isInstansi) {
+    if (isNik && isNoTelp && isAlamatInstansi && isInstansi) {
         buttonRegister.removeAttribute("disabled");
         buttonRegister.style.backgroundColor = "#5465ff";
         buttonRegister.style.color = "white";
@@ -160,13 +160,13 @@ no_telp.addEventListener("input", function (event) {
     );
 });
 
-nama_organisasi.addEventListener("input", function (event) {
-    const namaOrganisasiValue = event.target.value;
+alamat_instansi.addEventListener("input", function (event) {
+    const alamatInstansiValue = event.target.value;
     checkAndChangeButtonColorStep(
         nik.value,
         instansi.value,
         no_telp.value,
-        namaOrganisasiValue
+        alamatInstansiValue
     );
 });
 

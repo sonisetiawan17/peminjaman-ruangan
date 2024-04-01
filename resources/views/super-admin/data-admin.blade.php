@@ -77,8 +77,8 @@
                                     <td>{{ $i->email }}</td>
                                     <td>
                                         <div class="btn-group">
-                                            <a href="{{ route('superadmin.lihat_admin', $i->id) }}" type="button"
-                                                class="btn btn-white"><i class="fa fa-eye text-gray"></i></a>
+                                            {{-- <a href="{{ route('superadmin.lihat_admin', $i->id) }}" type="button"
+                                                class="btn btn-white"><i class="fa fa-eye text-gray"></i></a> --}}
 
                                             <a id="modal_show" href="#" type="button" data-toggle="modal"
                                                 data-target="#isimodal" data-id="{{ $i->id }}" data-name="{{ $i->name }}"
@@ -176,8 +176,8 @@
 
                             <label class="col-md-4 col-form-label mt-3">Password <sup class="text-red">*</sup></label>
                             <div class="col-md-8 mt-3">
-                                <input required name="password" type="password"
-                                    class="form-control form-input text-small" />
+                                <input name="password" type="password"
+                                    class="form-control form-input text-small" placeholder="Optional" />
                             </div>
                         </div>
                 </div>

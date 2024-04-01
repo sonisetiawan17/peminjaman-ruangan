@@ -17,8 +17,8 @@ class AlatPendukung extends Model
         'nama_alat',
     ];
 
-    public function permohonan()
-    {
-        return $this->hasMany(Permohonan::class, 'id_alat');
-    }
+    // public function permohonan()
+    // {
+    //     return $this->hasMany(Permohonan::class, 'alat_id');
+    // }
 }

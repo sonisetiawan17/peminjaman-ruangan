@@ -58,7 +58,6 @@
                             <tr>
                                 <th width="1%">No</th>
                                 <th class="text-nowrap">Nama Instansi</th>
-                                <th class="text-nowrap">Alamat Instansi</th>
                                 <th class="text-nowrap" width="10%">Aksi</th>
                             </tr>
                         </thead>
@@ -68,7 +67,6 @@
                                 <tr>
                                     <td>{{ $no++ }}</td>
                                     <td>{{ $i->nama_instansi }}</td>
-                                    <td>{{ $i->alamat_instansi }}</td>
                                     <td>
                                         <div class="btn-group">
                                             <a id="modal_show" href="#" type="button" data-toggle="modal"
@@ -113,11 +111,6 @@
                                 <input required name="nama_instansi" type="text"
                                     class="form-control form-input text-small" />
                             </div>
-                            <label class="col-md-5 col-form-label mt-3">Alamat Instansi <sup class="text-red">*</sup></label>
-                            <div class="col-md-7 mt-3">
-                                <input required name="alamat_instansi" type="text"
-                                    class="form-control form-input text-small" />
-                            </div>
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -144,12 +137,6 @@
                             <div class="col-md-7">
                                 <input type="hidden" id="id_instansi" name="id_instansi">
                                 <input required name="nama_instansi" id="nama_instansi" type="text"
-                                    class="form-control form-input text-small" />
-                            </div>
-
-                            <label class="col-md-5 col-form-label mt-3">Alamat Instansi <sup class="text-red">*</sup></label>
-                            <div class="col-md-7 mt-3">
-                                <input required id="alamat_instansi" name="alamat_instansi" type="text"
                                     class="form-control form-input text-small" />
                             </div>
                         </div>

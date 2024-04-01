@@ -34,7 +34,7 @@ class InstansiTableSeeder extends Seeder
             'Inspektorat Kota Cimahi',
             'Kecamatan Cimahi Utara',
             'Kecamatan Cimahi Tengah',
-            'Kecamatan Cimahi Selatan',
+            'Kecamatan Cimahi Selatan',   
             'Lainnya'
         ];
 

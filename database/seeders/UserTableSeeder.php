@@ -38,23 +38,9 @@ class UserTableSeeder extends Seeder
                 'password' => bcrypt('rahasiabanget'),
                 'nik' => '3273070747000001',
                 'no_telp' => '085219881523',
-                'nama_organisasi' => 'Dicoding',
             ],
         );
 
         $user->assignRole('user');
-
-        $user2 = User::create(
-            [
-                'name' => 'Michael',
-                'email' => 'michael@gmail.com',
-                'password' => bcrypt('rahasiabanget'),
-                'nik' => '3273070747000002',
-                'no_telp' => '081546573271',
-                'nama_organisasi' => 'Dicoding',
-            ],
-        );
-
-        $user2->assignRole('user');
     }
 }

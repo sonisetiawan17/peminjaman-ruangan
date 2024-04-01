@@ -35,20 +35,15 @@
             </li>
         </ol>
     </nav>
-    <!-- end page-header -->
-    <!-- begin row -->
+
     <div class="row mt-4">
-        <!-- begin col-112 -->
         <div class="col-xl-12">
-            <!-- begin panel -->
             <div class="panel panel-inverse">
-                <!-- begin panel-heading -->
                 <div class="panel-heading" style="background-color: #ffffff;">
                     <img src="{{ asset('/assets/img/auth/history.png') }}" alt="users" class="h-6 mr-2" />
                     <h4 class="panel-title text-black">Data Permohonan</h4>
                 </div>
-                <!-- end panel-heading -->
-                <!-- begin panel-body -->
+
                 <div class="panel-body">
                     @if (session('sukses'))
                         <div class="alert alert-success fade show">
@@ -148,35 +143,6 @@
                                     </td>
                                     <td>
                                         <div class="btn-group">
-
-                                            <!-- <a id="modal_show" href="#" type="button" data-toggle="modal" data-target="#isimodal"
-                                                    data-id_permohonan="{{ $p->id_permohonan }}"
-                                                    data-nik="{{ $p->nik }}"
-                                                    data-no_telp="{{ $p->no_telp }}"
-                                                    data-bidang_instansi="{{ $p->bidang_instansi }}"
-                                                    data-alamat="{{ $p->alamat }}"
-                                                    data-name="{{ $p->name }}"
-                                                    data-email="{{ $p->email }}"
-                                                    data-nama_instansi="{{ $p->nama_instansi }}"
-                                                    data-nama_kegiatan="{{ $p->nama_kegiatan }}"
-                                                    data-jumlah_peserta="{{ $p->jumlah_peserta }}"
-                                                    data-narasumber="{{ $p->narasumber }}"
-                                                    data-ringkasan="{{ $p->ringkasan }}"
-                                                    data-surat_permohonan="{{ $p->surat_permohonan }}"
-                                                    data-rundown_acara="{{ $p->rundown_acara }}"
-                                                    data-output="{{ $p->output }}"
-                                                    data-outcome="{{ $p->outcome }}"
-                                                    data-outcome="{{ $p->outcome }}"
-                                                    data-created_at="{{ $p->created_at }}"
-                                                    data-status_permohonan="{{ $p->status_permohonan }}"
-                                                    data-catatan="{{ $p->catatan }}"
-                                                    data-tgl_mulai="{{ $p->tgl_mulai }}"
-                                                    data-jam_mulai="{{ $p->jam_mulai }}"
-                                                    data-tgl_selesai="{{ $p->tgl_selesai }}"
-                                                    data-jam_selesai="{{ $p->jam_selesai }}"
-                                                    data-nama_fasilitas="{{ $p->nama_fasilitas }}"
-                                                    class="btn btn-white btn-outline">
-                                                    <i class="fa fa-search-plus text-black"></i></a> -->
                                             <a href="{{ route('admin.show', $p->id_permohonan) }}" type="button"
                                                 class="btn btn-white"><i class="fa fa-eye text-gray"></i></a>
 
@@ -195,23 +161,18 @@
                         </tbody>
                     </table>
                 </div>
-                <!-- end panel-body -->
             </div>
-            <!-- end panel -->
         </div>
-        <!-- end col-10 -->
     </div>
 
     </div>
     </div>
-    <!-- end row -->
 
-    <!-- #modal-dialog acc -->
     <div class="modal fade" id="modal-acc">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content shadow-lg p-3 mb-5 bg-white rounded">
                 <div class="modal-header">
-                    <h4 class="modal-title">Catatan</h4>
+                    <h4 class="modal-title">Catatan (Optional)</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
                             class="fa fa-times"></i></button>
                 </div>
@@ -232,9 +193,7 @@
             </div>
         </div>
     </div>
-    <!-- end modal  -->
 
-    <!-- #modal-dialog tolak -->
     <div class="modal fade" id="modal-tolak">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content shadow-lg p-3 mb-5 bg-white rounded">
@@ -261,10 +220,6 @@
         </div>
     </div>
 
-    <!-- end modal  -->
-
-
-    <!-- modal lihat pemohon -->
     <div class="modal fade" id="isimodal">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">

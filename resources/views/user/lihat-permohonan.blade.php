@@ -7,9 +7,9 @@
         $totalUser = App\Models\User::whereNotIn('name', ['Admin', 'Super Admin'])->count();
     @endphp
 
-<main class="bg-[#f7f7f8] mx-32">
-    <div class="grid grid-cols-[20%,1fr] gap-5">
-        <div class="mt-[100px]">
+<main class="bg-[#f7f7f8] mx-[8px] md:mx-[16px] lg:mx-32">
+    <div class="lg:grid lg:grid-cols-[20%,1fr] gap-5">
+        <div class="mt-[100px] hidden lg:block">
             <div class="bg-white p-4 rounded-xl mt-3" style="box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;">
                 <div class="flex flex-col items-center justify-center gap-y-3">
                     <img src="{{ asset('/assets/img/auth/profile.png') }}" class="h-20" />
@@ -41,8 +41,8 @@
                 </div>
             </div>
         </div>
-        <div class="mt-[100px]">
-            <div class="bg-white p-4 rounded-xl mt-3" style="box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;">
+        <div class="pt-[70px] lg:pt-0 lg:mt-[100px]">
+            <div class="bg-white p-[10px] md:p-[16px] rounded-xl mt-3" style="box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;">
                 <div class="border-b border-neutral-300 pb-3 w-full">
                     <a href="{{ route('user.test') }}">
                         <button class="button-ghost rounded-md"><i class="fa-solid fa-arrow-left mr-1"></i> Kembali</button>
@@ -52,76 +52,76 @@
                 </div>
     
             <div class="mt-3">
-                <div class="bg-white shadow-sm border p-[25px]">
+                <div class="bg-white shadow-sm border p-[15px] md:p-[25px]">
                     <div class="border-b border-neutral-200 pb-3 font-medium" style="font-size: 14px">
-                        <h1>Identitas Permohonan - {{ $permohonan->user->name }}</h1>
+                        <h1>Identitas Permohonan</h1>
                     </div>
-                    <div class="grid grid-cols-4 gap-x-3 gap-y-10 mt-4">
+                    <div class="md:grid md:grid-cols-3 2xl:grid-cols-4 gap-x-3 gap-y-10 mt-4">
                         <div class="">
                             <h3 class="font-medium">SKPD/Non SKPD</h3>
-                            <p class="pt-2 text-neutral-500">{{ $permohonan->skpd }}</p>
+                            <p class="pt-2 text-neutral-500">{{ $permohonan->skpd === 'skpd' ? 'Skpd' : 'Non Skpd' }}</p>
                         </div>
-                        <div class="">
+                        <div class="mt-[20px] md:mt-0">
                             <h3 class="font-medium">Bidang Kegiatan</h3>
-                            <p class="pt-2 text-neutral-500">{{ $permohonan->bidang_kegiatan->nama_bidang }}</p>
+                            <p class="pt-2 text-neutral-500">{{ $permohonan->bidang_kegiatan }}</p>
                         </div>
-                        <div class="">
+                        <div class="mt-[20px] md:mt-0">
                             <h3 class="font-medium">No KTP</h3>
                             <p class="pt-2 text-neutral-500">{{ $permohonan->user->nik }}</p>
                         </div>
-                        <div class="">
+                        <div class="mt-[20px] md:mt-0">
                             <h3 class="font-medium">Nama Pemohon</h3>
                             <p class="pt-2 text-neutral-500">{{ $permohonan->user->name }}</p>
                         </div>
-                        <div class="">
+                        <div class="mt-[20px] md:mt-0">
                             <h3 class="font-medium">No Telepon</h3>
                             <p class="pt-2 text-neutral-500">{{ $permohonan->user->no_telp }}</p>
                         </div>
-                        <div class="">
-                            <h3 class="font-medium">Alamat Lengkap</h3>
-                            <p class="pt-2 text-neutral-500">{{ $permohonan->user->alamat }}</p>
+                        <div class="mt-[20px] md:mt-0">
+                            <h3 class="font-medium">Email</h3>
+                            <p class="pt-2 text-neutral-500">{{ $permohonan->user->email }}</p>
                         </div>
-                        <div class="">
+                        <div class="mt-[20px] md:mt-0">
                             <h3 class="font-medium">Nama Instansi/Pribadi</h3>
-                            <p class="pt-2 text-neutral-500">{{ $permohonan->instansi->nama_instansi }}</p>
+                            <p class="pt-2 text-neutral-500">{{ $permohonan->user->instansi->nama_instansi }}</p>
                         </div>
-                        <div class="">
+                        <div class="mt-[20px] md:mt-0">
                             <h3 class="font-medium">Status dalam Instansi/Pribadi</h3>
                             <p class="pt-2 text-neutral-500">{{ $permohonan->status_instansi }}</p>
                         </div>
-                        <div class="">
+                        <div class="mt-[20px] md:mt-0">
                             <h3 class="font-medium">Bidang Instansi/Pribadi</h3>
                             <p class="pt-2 text-neutral-500">{{ $permohonan->bidang_instansi }}</p>
                         </div>
-                        <div class="">
+                        <div class="mt-[20px] md:mt-0">
                             <h3 class="font-medium">Alamat Instansi/Pribadi</h3>
-                            <p class="pt-2 text-neutral-500">{{ $permohonan->instansi->alamat_instansi }}</p>
+                            <p class="pt-2 text-neutral-500">{{ $permohonan->user->alamat_instansi }}</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white shadow-sm border p-[25px] mt-5">
+                <div class="bg-white shadow-sm border p-[15px] md:p-[25px] mt-5">
                     <div class="border-b border-neutral-200 pb-3 font-medium" style="font-size: 14px">
-                        <h1>Kegiatan - {{ $permohonan->user->name }}</h1>
+                        <h1>Kegiatan</h1>
                     </div>
-                    <div class="grid grid-cols-4 gap-x-3 gap-y-10 mt-4">
-                        <div class="">
+                    <div class="md:grid md:grid-cols-3 2xl:grid-cols-4 gap-x-3 gap-y-10 mt-4">
+                        <div class="mt-[20px] md:mt-0">
                             <h3 class="font-medium">Nama Kegiatan</h3>
                             <p class="pt-2 text-neutral-500">{{ $permohonan->nama_kegiatan }}</p>
                         </div>
-                        <div class="">
+                        <div class="mt-[20px] md:mt-0">
                             <h3 class="font-medium">Jumlah Peserta</h3>
                             <p class="pt-2 text-neutral-500">{{ $permohonan->jumlah_peserta }}</p>
                         </div>
-                        <div class="">
+                        <div class="mt-[20px] md:mt-0">
                             <h3 class="font-medium">Narasumber</h3>
                             <p class="pt-2 text-neutral-500">{{ $permohonan->narasumber }}</p>
                         </div>
-                        <div class="">
+                        <div class="mt-[20px] md:mt-0">
                             <h3 class="font-medium">Ringkasan</h3>
                             <p class="pt-2 text-neutral-500">{{ $permohonan->ringkasan }}</p>
                         </div>
-                        <div class="">
+                        <div class="mt-[20px] md:mt-0">
                             <h3 class="font-medium">Surat Permohonan</h3>
                             <div class="gallery ml-2 mt-2">
                                 <a href="/file_upload/{{ $permohonan->surat_permohonan }}" data-lightbox="gallery-group-1">
@@ -132,7 +132,7 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="">
+                        <div class="mt-[20px] md:mt-0">
                             <h3 class="font-medium">Rundown Acara</h3>
                             <div class="gallery ml-2 mt-2">
                                 <a href="/file_upload/{{ $permohonan->rundown_acara }}" data-lightbox="gallery-group-1">
@@ -143,59 +143,49 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="">
+                        <div class="mt-[20px] md:mt-0">
                             <h3 class="font-medium">Output</h3>
-                            <p class="pt-2 text-neutral-500">{{ $permohonan->output }}</p>
+                            <p class="pt-2 text-neutral-500">{{ $permohonan->output === null ? '-' : $permohonan->output }}</p>
                         </div>
-                        <div class="">
+                        <div class="mt-[20px] md:mt-0">
                             <h3 class="font-medium">Outcome</h3>
-                            <p class="pt-2 text-neutral-500">{{ $permohonan->outcome }}</p>
+                            <p class="pt-2 text-neutral-500">{{ $permohonan->outcome === null ? '-' : $permohonan->outcome }}</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white shadow-sm border p-[25px] mt-5">
+                <div class="bg-white shadow-sm border p-[15px] md:p-[25px] mt-5">
                     <div class="border-b border-neutral-200 pb-3 font-medium" style="font-size: 14px">
-                        <h1>Peminjaman - {{ $permohonan->user->name }}</h1>
+                        <h1>Peminjaman</h1>
                     </div>
-                    <div class="grid grid-cols-4 gap-x-3 gap-y-10 mt-4">
-                        <div class="">
+                    <div class="md:grid md:grid-cols-3 2xl:grid-cols-4 gap-x-3 gap-y-10 mt-4">
+                        <div class="mt-[20px] md:mt-0mt-[20px] md:mt-0">
                             <h3 class="font-medium">Tanggal Mulai</h3>
                             <p class="pt-2 text-neutral-500">{{ \Carbon\Carbon::parse($data
                                 ->tgl_mulai)->format('d M Y') }}</p>
                         </div>
-                        <div class="">
+                        <div class="mt-[20px] md:mt-0mt-[20px] md:mt-0">
                             <h3 class="font-medium">Jam Mulai</h3>
                             <p class="pt-2 text-neutral-500">{{ sprintf("%02d", $data->jam_mulai) }}:00</p>
                         </div>
-                        <div class="">
+                        <div class="mt-[20px] md:mt-0mt-[20px] md:mt-0">
                             <h3 class="font-medium">Tanggal Selesai</h3>
                             <p class="pt-2 text-neutral-500">{{ \Carbon\Carbon::parse($data
                                 ->tgl_selesai)->format('d M Y') }}</p>
                         </div>
-                        <div class="">
+                        <div class="mt-[20px] md:mt-0mt-[20px] md:mt-0">
                             <h3 class="font-medium">Jam Selesai</h3>
-                            <p class="pt-2 text-neutral-500">{{ sprintf("%02d", $data->jam_selesai) }}:00</p>
+                            <p class="pt-2 text-neutral-500">{{ sprintf("%02d", $data->jam_selesai) }}:{{ $data->jam_selesai == 15 ? '30' : '00' }}</p>
                         </div>
-                        <div class="">
+                        <div class="mt-[20px] md:mt-0mt-[20px] md:mt-0">
                             <h3 class="font-medium">Fasilitas</h3>
-                            <p class="pt-2 text-neutral-500">
-                                @php
-                                    $inputUser = $permohonan->id_fasilitas;
-                                    $arrayFasilitas = explode(",", $inputUser);
-                                    $fasilitas = \App\Models\Fasilitas::whereIn('id_fasilitas', $arrayFasilitas)->pluck('nama_fasilitas');
-                                    $arrayNamaFasilitas = $fasilitas->toArray();
-                                    $stringNamaFasilitas = implode(", ", $arrayNamaFasilitas);
-                                    echo $stringNamaFasilitas;
-                                @endphp
-                            </p>
-                            
+                            <p class="pt-2 text-neutral-500">{{ $permohonan->fasilitas->nama_fasilitas }}</p>
                         </div>
-                        <div class="">
+                        <div class="mt-[20px] md:mt-0mt-[20px] md:mt-0">
                             <h3 class="font-medium">Alat Pendukung</h3>
                             <p class="pt-2 text-neutral-500">
                                 @php
-                                    $inputUser = $permohonan->id_alat;
+                                    $inputUser = $permohonan->alat_id;
                                     $arrayFasilitas = explode(",", $inputUser);
                                     $fasilitas = \App\Models\AlatPendukung::whereIn('id_alat_pendukung', $arrayFasilitas)->pluck('nama_alat');
                                     $arrayNamaFasilitas = $fasilitas->toArray();
@@ -207,29 +197,31 @@
                     </div>
                 </div>
 
-                <div class="bg-white shadow-sm border p-[25px] mt-5">
+                <div class="bg-white shadow-sm border p-[15px] md:p-[25px] mt-5">
                     <div class="border-b border-neutral-200 pb-3 font-medium" style="font-size: 14px">
-                        <h1>Status - {{ $permohonan->user->name }}</h1>
+                        <h1>Status</h1>
                     </div>
-                    <div class="grid grid-cols-4 gap-x-3 gap-y-10 mt-4">
-                        <div class="">
+                    <div class="md:grid md:grid-cols-3 2xl:grid-cols-4 gap-x-3 gap-y-10 mt-4">
+                        <div class="mt-[20px] md:mt-0">
                             <h3 class="font-medium">Tanggal Pengajuan Permohonan</h3>
                             <p class="pt-2 text-neutral-500">{{ \Carbon\Carbon::parse($permohonan
-                                ->created_at)->format('d M Y - H:i') }}</p>
+                                ->created_at)->format('d M Y') }}</p>
                         </div>
-                        <div class="">
+                        <div class="mt-[20px] md:mt-0">
                             <h3 class="font-medium">Status Permohonan</h3>
                             @if ($permohonan->status_permohonan === 'Diterima')
                             <span class="mt-3 inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-green-100 text-green-800">{{ $permohonan->status_permohonan }}</span>
                             @elseif ($permohonan->status_permohonan === 'Ditolak')
                             <span class="mt-3 inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-red-100 text-red-800">{{ $permohonan->status_permohonan }}</span>
+                            @elseif ($permohonan->status_permohonan === 'Batal')
+                            <span class="mt-3 inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-gray-500 text-white">{{ $permohonan->status_permohonan }}</span>
                             @else 
                             <span class="mt-3 inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-yellow-200 text-yellow-800">{{ $permohonan->status_permohonan }}</span>
                             @endif
                         </div>
-                        <div class="">
+                        <div class="mt-[20px] md:mt-0">
                             <h3 class="font-medium">Catatan Admin</h3>
-                            <p class="pt-2 text-neutral-500">{{ $permohonan->catatan }}</p>
+                            <p class="pt-2 text-neutral-500">{{ $permohonan->catatan === null ? '-' : $permohonan->catatan }}</p>
                         </div>
                     </div>
                 </div>

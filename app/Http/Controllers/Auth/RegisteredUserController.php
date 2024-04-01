@@ -9,6 +9,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 
@@ -21,7 +22,10 @@ class RegisteredUserController extends Controller
      */
     public function create()
     {
-        $instansi = Instansi::all();
+        $instansi = DB::table('instansi')
+                        ->orderByRaw("CASE WHEN nama_instansi = 'Lainnya' THEN 1 ELSE 0 END")
+                        ->get();
+                        
         return view('auth.register', compact('instansi'));
     }
 
@@ -43,7 +47,7 @@ class RegisteredUserController extends Controller
             'instansi_id' => 'required|integer',
             'nik' => ['required', 'string'],
             'no_telp' => ['required', 'string'],
-            'nama_organisasi' => ['required', 'string']
+            'alamat_instansi' => ['required', 'string']
         ]);
 
         $user = User::create([
@@ -53,8 +57,8 @@ class RegisteredUserController extends Controller
             'instansi_id' => $request->instansi_id,
             'nik' => $request->nik,
             'no_telp' => $request->no_telp,
+            'alamat_instansi' => $request->alamat_instansi,
             'nama_instansi' => $request->nama_instansi,
-            'nama_organisasi' => $request->nama_organisasi,
         ]);
 
         $user->assignRole('user');

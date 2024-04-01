@@ -28,6 +28,12 @@ class UserDashboardController extends Controller
     {
         $currentDate = Carbon::now()->format('Y-m-d');
         $fasilitas = DB::table('fasilitas')->get();
+        $fasilitasCount = DB::table('fasilitas')->count();
+        $lastFasilitasId = DB::table('fasilitas')
+                            ->orderBy('id_fasilitas', 'desc')
+                            ->pluck('id_fasilitas')
+                            ->first();
+
         $blokRuangan = DB::table('blok_ruangan')
                           ->whereDate('created_at', '>=', 'tgl_selesai')
                           ->get();
@@ -111,7 +117,7 @@ class UserDashboardController extends Controller
         $jadwal = DB::table('permohonan')
                     ->join('jadwal', 'jadwal.permohonan_id', '=', 'permohonan.id_permohonan')
                     ->join('users', 'users.id', '=', 'permohonan.user_id')
-                    ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.id_fasilitas')
+                    ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.fasilitas_id')
                     ->get();
 
         $jam_selesai = DB::table('jadwal')->select('jam_selesai')->get();
@@ -128,7 +134,7 @@ class UserDashboardController extends Controller
             $currDateSelesai[] = $tanggal->tgl_selesai;
         }
 
-        return view('user.dashboard', compact('date', 'jadwalArray', 'fasilitas', 'jadwal', 'blokRuangan', 'currentDate'));
+        return view('user.dashboard', compact('date', 'jadwalArray', 'fasilitas', 'jadwal', 'blokRuangan', 'currentDate', 'fasilitasCount', 'lastFasilitasId'));
     }
 
     public function downloadSOP()
@@ -215,7 +221,10 @@ class UserDashboardController extends Controller
 
         $date = Carbon::now()->format('m/d/Y');
 
-        $jadwal = DB::table('jadwal')->join('permohonan', 'permohonan.id_permohonan', '=', 'jadwal.permohonan_id')->select('tgl_mulai', 'tgl_selesai', 'jam_mulai', 'jam_selesai', 'id_fasilitas', 'id_alat')->get();
+        $jadwal = DB::table('jadwal')
+                    ->join('permohonan', 'permohonan.id_permohonan', '=', 'jadwal.permohonan_id')
+                    ->select('tgl_mulai', 'tgl_selesai', 'jam_mulai', 'jam_selesai', 'fasilitas_id', 'alat_id')
+                    ->get();
 
         return view('user.buat-permohonan-form', compact('bidang', 'instansi', 'fasilitas', 'alat', 'jadwal', 'blok', 'id_fasilitas', 'nama_fasilitas', 'tgl_mulai', 'tgl_selesai', 'tgl_mulai_day', 'tgl_mulai_convert', 'tgl_selesai_day', 'tgl_selesai_convert', 'jam_mulai', 'jam_selesai', 'start_day', 'end_day', 'file'));
     }
@@ -230,7 +239,7 @@ class UserDashboardController extends Controller
         $dataJadwal = DB::table('permohonan')
                     ->join('jadwal', 'jadwal.permohonan_id', '=', 'permohonan.id_permohonan')
                     ->join('users', 'users.id', '=', 'permohonan.user_id')
-                    ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.id_fasilitas')
+                    ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.fasilitas_id')
                     ->get();
 
         $user_id = Auth::user()->id;
@@ -240,8 +249,7 @@ class UserDashboardController extends Controller
         $permohonan = DB::table('permohonan')
                         ->join('users', 'users.id', '=', 'permohonan.user_id')
                         ->join('jadwal', 'jadwal.permohonan_id', '=', 'permohonan.id_permohonan')
-                        ->join('instansi', 'instansi.id_instansi', '=', 'permohonan.instansi_id')
-                        ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.id_fasilitas')
+                        ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.fasilitas_id')
                         ->where('users.id', '=', $user_id)
                         ->where('permohonan.id_permohonan', '=', $id_permohonan)
                         ->first();
@@ -256,22 +264,6 @@ class UserDashboardController extends Controller
         $request->validate([
             'surat_permohonan' => 'required|mimes:doc,docx,xls,xlsx,pdf,jpg,jpeg,png,bmp',
             'rundown_acara' => 'required|mimes:doc,docx,xls,xlsx,pdf,jpg,jpeg,png,bmp',
-            'skpd' => 'required',
-            'bidang_id' => 'required',
-            'instansi_id' => 'required',
-            'user_id' => 'required',
-            'status_instansi' => 'required',
-            'bidang_instansi' => 'required',
-            'nama_kegiatan' => 'required',
-            'jumlah_peserta' => 'required',
-            'narasumber' => 'required',
-            'ringkasan' => 'required',
-            'permohonan' => 'required',
-            'id_fasilitas' => 'required',
-            'tgl_mulai' => 'required',
-            'jam_mulai' => 'required',
-            'tgl_selesai' => 'required',
-            'jam_selesai' => 'required',
         ]);
 
         if ($request->hasFile('surat_permohonan') && $request->hasFile('rundown_acara')) {
@@ -301,8 +293,7 @@ class UserDashboardController extends Controller
             if ($file_surat->move($uploadPath, $rename_surat) && $file_acara->move($uploadPath, $rename_acara)) {
                 $permohonan = Permohonan::find($id_permohonan);
                 $permohonan->skpd = $request->skpd;
-                $permohonan->bidang_id = $request->bidang_id;
-                $permohonan->instansi_id = $request->instansi_id;
+                $permohonan->bidang_kegiatan = $request->bidang_kegiatan;
                 $permohonan->user_id = $user_id;
                 $permohonan->status_instansi = $request->status_instansi;
                 $permohonan->bidang_instansi = $request->bidang_instansi;
@@ -317,8 +308,8 @@ class UserDashboardController extends Controller
                 $permohonan->surat_permohonan = $rename_surat;
                 $permohonan->rundown_acara = $rename_acara;
 
-                $permohonan->id_fasilitas = $id_fasilitas;
-                $permohonan->id_alat = $id_alat;
+                $permohonan->fasilitas_id = $id_fasilitas;
+                $permohonan->alat_id = $id_alat;
                 $permohonan->update();
 
                 if (isset($permohonan['id_permohonan'])) {
@@ -337,13 +328,24 @@ class UserDashboardController extends Controller
                 $jadwal->update();
 
                 //  return $data;
-                return redirect()->back()->with('sukses', 'Berhasil, file telah di upload');
+                return redirect()->to('/dashboard')->with('sukses', 'Berhasil, file telah di upload');
             }
             //  return $data;
-            return redirect()->back()->with('sukses', 'Error, file tidak dapat di upload');
+            return redirect()->to('/dashboard')->with('error', 'Error, file tidak dapat di upload');
         }
         //  return "Gagal";
-        return redirect()->back()->with('sukses', 'Error, tidak ada file ditemukan');
+        return redirect()->to('/dashboard')->with('error', 'Error, tidak ada file ditemukan');
+    }
+
+    public function batalPermohonan(Request $request)
+    {
+        $permohonan_id = $request->id_permohonan;
+        $permohonan = Permohonan::find($permohonan_id);
+        $permohonan->status_permohonan = $request->status_permohonan;
+
+        $permohonan->update();
+
+        return back()->with('sukses', 'Berhasil, file telah di upload');
     }
 
     public function simpanPermohonan(Request $request)
@@ -381,9 +383,9 @@ class UserDashboardController extends Controller
             if ($file_surat->move($uploadPath, $rename_surat) && $file_acara->move($uploadPath, $rename_acara)) {
                 $data = new Permohonan();
                 $data->skpd = $request->skpd;
-                $data->bidang_id = $request->bidang_id;
+                $data->bidang_kegiatan = $request->bidang_kegiatan;
                 $data->user_id = $request->user_id;
-                $data->instansi_id = $request->instansi_id;
+                // $data->instansi_id = $request->instansi_id;
                 $data->status_instansi = $request->status_instansi;
                 $data->bidang_instansi = $request->bidang_instansi;
                 $data->nama_kegiatan = $request->nama_kegiatan;
@@ -396,8 +398,8 @@ class UserDashboardController extends Controller
                 $data->surat_permohonan = $rename_surat;
                 $data->rundown_acara = $rename_acara;
 
-                $data->id_fasilitas = $id_fasilitas;
-                $data->id_alat = $id_alat;
+                $data->fasilitas_id = $id_fasilitas;
+                $data->alat_id = $id_alat;
                 $data->save();
 
                 if (isset($data['id_permohonan'])) {
@@ -416,13 +418,13 @@ class UserDashboardController extends Controller
                 $jadwal->save();
 
                 //  return $data;
-                return redirect()->to('user/test')->with('sukses', 'Berhasil, file telah di upload');
+                return redirect()->to('/dashboard')->with('sukses', 'Berhasil, file telah di upload');
             }
             //  return $data;
-            return redirect()->to('user/test')->with('sukses', 'Error, file tidak dapat di upload');
+            return redirect()->to('/dashboard')->with('error', 'Error, file tidak dapat di upload');
         }
         //  return "Gagal";
-        return redirect()->back()->with('sukses', 'Error, tidak ada file ditemukan');
+        return redirect()->back()->with('error', 'Error, tidak ada file ditemukan');
     }
 
     public function lihatPermohonan($id_permohonan)
@@ -432,26 +434,25 @@ class UserDashboardController extends Controller
 
         $permohonan_bulan_ini = DB::table('permohonan')
                                     ->join('users', 'users.id', '=', 'permohonan.user_id')
-                                    ->join('bidang_kegiatan', 'bidang_kegiatan.id_bidang_kegiatan', '=', 'permohonan.bidang_id')
-                                    ->join('instansi', 'instansi.id_instansi', '=', 'permohonan.instansi_id')
                                     ->join('jadwal', 'jadwal.permohonan_id', '=', 'permohonan.id_permohonan')
-                                    ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.id_fasilitas')
-                                    ->join('alat_pendukung', 'alat_pendukung.id_alat_pendukung', '=', 'permohonan.id_alat')
+                                    ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.fasilitas_id')
+                                    ->join('alat_pendukung', 'alat_pendukung.id_alat_pendukung', '=', 'permohonan.alat_id')
                                     ->whereMonth('permohonan.created_at', '=', $currentMonth)
                                     ->count();
         
         $semua_permohonan = DB::table('permohonan')
                                     ->join('users', 'users.id', '=', 'permohonan.user_id')
-                                    ->join('bidang_kegiatan', 'bidang_kegiatan.id_bidang_kegiatan', '=', 'permohonan.bidang_id')
-                                    ->join('instansi', 'instansi.id_instansi', '=', 'permohonan.instansi_id')
                                     ->join('jadwal', 'jadwal.permohonan_id', '=', 'permohonan.id_permohonan')
-                                    ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.id_fasilitas')
-                                    ->join('alat_pendukung', 'alat_pendukung.id_alat_pendukung', '=', 'permohonan.id_alat')
+                                    ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.fasilitas_id')
+                                    ->join('alat_pendukung', 'alat_pendukung.id_alat_pendukung', '=', 'permohonan.alat_id')
                                     ->where('users.id', '=', $user_id)
                                     ->count();
 
         $permohonan = Permohonan::find($id_permohonan);
-        $data = DB::table('permohonan')->join('jadwal', 'jadwal.permohonan_id', '=', 'permohonan.id_permohonan')->where('permohonan.id_permohonan', '=', $id_permohonan)->first();
+
+        $data = DB::table('permohonan')
+                    ->join('jadwal', 'jadwal.permohonan_id', '=', 'permohonan.id_permohonan')
+                    ->where('permohonan.id_permohonan', '=', $id_permohonan)->first();
 
         return view('user.lihat-permohonan', compact('permohonan', 'data', 'permohonan_bulan_ini', 'semua_permohonan'));
     }
@@ -533,30 +534,24 @@ class UserDashboardController extends Controller
         
         $permohonan = DB::table('permohonan')
                           ->join('users', 'users.id', '=', 'permohonan.user_id')
-                          ->join('bidang_kegiatan', 'bidang_kegiatan.id_bidang_kegiatan', '=', 'permohonan.bidang_id')
-                          ->join('instansi', 'instansi.id_instansi', '=', 'permohonan.instansi_id')
                           ->join('jadwal', 'jadwal.permohonan_id', '=', 'permohonan.id_permohonan')
-                          ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.id_fasilitas')
+                          ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.fasilitas_id')
                           ->where('users.id', '=', $user_id)
                           ->paginate(10);
         
         $semua_permohonan = DB::table('permohonan')
                                 ->join('users', 'users.id', '=', 'permohonan.user_id')
-                                ->join('bidang_kegiatan', 'bidang_kegiatan.id_bidang_kegiatan', '=', 'permohonan.bidang_id')
-                                ->join('instansi', 'instansi.id_instansi', '=', 'permohonan.instansi_id')
                                 ->join('jadwal', 'jadwal.permohonan_id', '=', 'permohonan.id_permohonan')
-                                ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.id_fasilitas')
-                                ->join('alat_pendukung', 'alat_pendukung.id_alat_pendukung', '=', 'permohonan.id_alat')
+                                ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.fasilitas_id')
+                                ->join('alat_pendukung', 'alat_pendukung.id_alat_pendukung', '=', 'permohonan.alat_id')
                                 ->where('users.id', '=', $user_id)
                                 ->count();
         
         $permohonan_bulan_ini = DB::table('permohonan')
                                     ->join('users', 'users.id', '=', 'permohonan.user_id')
-                                    ->join('bidang_kegiatan', 'bidang_kegiatan.id_bidang_kegiatan', '=', 'permohonan.bidang_id')
-                                    ->join('instansi', 'instansi.id_instansi', '=', 'permohonan.instansi_id')
                                     ->join('jadwal', 'jadwal.permohonan_id', '=', 'permohonan.id_permohonan')
-                                    ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.id_fasilitas')
-                                    ->join('alat_pendukung', 'alat_pendukung.id_alat_pendukung', '=', 'permohonan.id_alat')
+                                    ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.fasilitas_id')
+                                    ->join('alat_pendukung', 'alat_pendukung.id_alat_pendukung', '=', 'permohonan.alat_id')
                                     ->whereMonth('permohonan.created_at', '=', $currentMonth)
                                     ->count();  
         
@@ -567,9 +562,16 @@ class UserDashboardController extends Controller
     {
         $id = $request->id;
         $data = User::find($id);
-
-        $data->name = $request->name;
-        $data->instansi_id = $request->instansi_id;
+                
+        if ($request->instansi_id != 21) {
+            $data->name = $request->name;
+            $data->instansi_id = $request->instansi_id;
+            $data->nama_instansi = null;
+        } else {
+            $data->name = $request->name;
+            $data->instansi_id = $request->instansi_id;
+            $data->nama_instansi = $request->nama_instansi;
+        }
         $data->update();
 
         return back()->with('sukses', 'Data Berhasil diubah!');
@@ -583,7 +585,7 @@ class UserDashboardController extends Controller
         $data->name = $request->name;
         $data->email = $request->email;
         $data->no_telp = $request->no_telp;
-        $data->alamat = $request->alamat;
+        $data->nik = $request->nik;
         $data->update();
 
         return back()->with('sukses', 'Data Berhasil diubah!');
@@ -641,7 +643,7 @@ class UserDashboardController extends Controller
         $jadwal = DB::table('permohonan')
                     ->join('jadwal', 'jadwal.permohonan_id', '=', 'permohonan.id_permohonan')
                     ->join('users', 'users.id', '=', 'permohonan.user_id')
-                    ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.id_fasilitas')
+                    ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.fasilitas_id')
                     ->whereDate('tgl_mulai', '>=', $currentDate)
                     ->get();
 
@@ -675,7 +677,7 @@ class UserDashboardController extends Controller
         $currentJadwal = DB::table('permohonan')
                             ->join('jadwal', 'jadwal.permohonan_id', '=', 'permohonan.id_permohonan')
                             ->join('users', 'users.id', '=', 'permohonan.user_id')
-                            ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.id_fasilitas')
+                            ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.fasilitas_id')
                             ->where('tgl_mulai', '=', $currentDate)
                             ->get();
 
@@ -742,16 +744,14 @@ class UserDashboardController extends Controller
     public function cetakPermohonan($id_permohonan){
         
         $id_permohonan = $id_permohonan;
-        $data = DB::table('permohonan')
-                          ->join('users', 'users.id', '=', 'permohonan.user_id')
-                          ->join('bidang_kegiatan', 'bidang_kegiatan.id_bidang_kegiatan', '=', 'permohonan.bidang_id')
-                          ->join('instansi', 'instansi.id_instansi', '=', 'permohonan.instansi_id')
-                          ->join('jadwal', 'jadwal.permohonan_id', '=', 'permohonan.id_permohonan')
-                          ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.id_fasilitas')
-                          ->join('alat_pendukung', 'alat_pendukung.id_alat_pendukung', '=', 'permohonan.id_alat')
-                          ->where('permohonan.id_permohonan', '=', $id_permohonan)
-                          ->first();
-                        //   dd($data);
+        // $data = DB::table('permohonan')
+        //                   ->join('users', 'users.id', '=', 'permohonan.user_id')
+        //                   ->join('jadwal', 'jadwal.permohonan_id', '=', 'permohonan.id_permohonan')
+        //                   ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.fasilitas_id')
+        //                   ->join('alat_pendukung', 'alat_pendukung.id_alat_pendukung', '=', 'permohonan.alat_id')
+        //                   ->where('permohonan.id_permohonan', '=', $id_permohonan)
+        //                   ->first();
+        $data = Permohonan::find($id_permohonan);
         $nama = Auth::user()->name;
         // $tgl = Carbon::now()->format('dmy');
         // $id = Permohonan::count('id_permohonan');
@@ -771,8 +771,8 @@ class UserDashboardController extends Controller
 
     }
 
-    public function qr($id_permohonan){
-
+    public function qr($id_permohonan)
+    {
         $user = Permohonan::
         join('users','users.id','=','permohonan.user_id')
         ->join('jadwal','jadwal.permohonan_id','permohonan.id_permohonan')

@@ -1,5 +1,7 @@
 @extends('layouts.landing')
 
+@section('title', 'Dashboard - Sistem Informasi Peminjaman Ruangan')
+
 @section('content')
 
 <main class="bg-[#f7f7f8] mx-[12px] md:mx-[50px] lg:mx-[128px]">
@@ -9,7 +11,11 @@
                 <div class="flex flex-col items-center justify-center gap-y-3">
                     <img src="{{ asset('/assets/img/auth/profile.png') }}" class="h-20" />
                     <h1 class="font-medium">{{ Auth::user()->name }}</h1>
-                    <p class="text-neutral-400 text-center" style="font-size: 11px">{{ Auth::user()->instansi->nama_instansi }}</p>
+                    @if (Auth::user()->nama_instansi === null)
+                        <p class="text-neutral-400 text-center" style="font-size: 11px">{{ Auth::user()->instansi->nama_instansi }}</p>
+                    @else 
+                        <p class="text-neutral-400 text-center" style="font-size: 11px">{{ Auth::user()->nama_instansi }}</p>
+                    @endif
                 </div>
                 <div class="w-full h-[1px] bg-gray-300 my-4"></div>
                 <div>
@@ -52,7 +58,7 @@
                 <div id="historyPage" class="hide">
                     <div class="mt-4 flex flex-row items-center justify-between">
                         <h1 class="font-medium text-lg">Histori Permohonan</h1>
-                        <div class="">
+                        {{-- <div class="">
                             <select class="text-xs rounded-sm border border-gray-300" name="skpd">
                                 <option value="semua_waktu" selected>Semua Waktu</option>
                                 <option value="tujuh_hari">7 Hari Terakhir</option>
@@ -62,7 +68,7 @@
                                 <option value="enam_bulan">6 Bulan Terakhir</option>
                                 <option value="dua_belas_bulan">12 Bulan Terakhir</option>
                             </select>
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="mt-3 border border-neutral-400">
                         <div class="bg-slate-200 border border-neutral-400 flex flex-row items-center justify-between">
@@ -77,20 +83,22 @@
                                       <table class="min-w-full divide-y divide-gray-200">
                                         <thead>
                                           <tr class="divide-x divide-gray-200">
-                                            <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Tanggal</th>
-                                            <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Nama Kegiatan</th>
-                                            <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Surat Permohonan</th>
-                                            <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Rundown Acara</th>
-                                            <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Status</th>
-                                            <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Aksi</th>
+                                              <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Nama Kegiatan</th>
+                                            <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Tanggal Mulai</th>
+                                            <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Tanggal Selesai</th>
+                                            <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Fasilitas</th>
+                                            <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Status</th>
+                                            <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Aksi</th>
                                           </tr>
                                         </thead>
                                         <tbody class="divide-y divide-gray-200" id="table-body">
                                             @foreach ($permohonan as $data)
                                             <tr class="divide-x divide-gray-200">
-                                                <td class="px-3 py-4 whitespace-nowrap text-xs text-gray-800">{{ \Carbon\Carbon::parse($data->created_at)->format('d/m/Y') }}</td>
                                                 <td class="px-3 py-4 whitespace-nowrap text-xs text-gray-800">{{ $data->nama_kegiatan }}</td>
-                                                <td class="px-3 py-4 text-xs text-gray-800">
+                                                <td class="px-3 py-4 whitespace-nowrap text-xs text-gray-800">{{ \Carbon\Carbon::parse($data->tgl_mulai)->format('d/m/Y') }}</td>
+                                                <td class="px-3 py-4 whitespace-nowrap text-xs text-gray-800">{{ \Carbon\Carbon::parse($data->tgl_selesai)->format('d/m/Y') }}</td>
+                                                <td class="px-3 py-4 whitespace-nowrap text-xs text-gray-800">{{ $data->nama_fasilitas }}</td>
+                                                {{-- <td class="px-3 py-4 text-xs text-gray-800">
                                                     <div class="ml-2">
                                                         <a href="/file_upload/{{ $data->surat_permohonan }}">
                                                             <div class="flex flex-row items-center gap-2">
@@ -109,7 +117,7 @@
                                                             </div>
                                                         </a>
                                                     </div>
-                                                </td>
+                                                </td> --}}
                                                 <td class="px-3 py-4 whitespace-nowrap text-xs text-gray-800">
                                                     <div class="flex items-center gap-x-3 whitespace-nowrap">
                                                         <div class="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden"
@@ -120,6 +128,9 @@
                                                                 style="width: 50%"></div>
                                                             @elseif ($data->status_permohonan == 'Diterima')
                                                                 <div class="flex flex-col justify-center rounded-full overflow-hidden bg-teal-500 text-xs text-white text-center whitespace-nowrap transition duration-500"
+                                                                style="width: 100%"></div>
+                                                            @elseif ($data->status_permohonan == 'Batal')
+                                                                <div class="flex flex-col justify-center rounded-full overflow-hidden bg-gray-800 text-xs text-white text-center whitespace-nowrap transition duration-500"
                                                                 style="width: 100%"></div>
                                                             @else 
                                                                 <div class="flex flex-col justify-center rounded-full overflow-hidden bg-red-500 text-xs text-white text-center whitespace-nowrap transition duration-500"
@@ -143,6 +154,37 @@
                                                         <a href="{{ route('user.editPermohonan', $data->id_permohonan) }}">
                                                             <button class="py-2 px-[10px] border border-gray-500 rounded"><i class="fa-solid fa-edit text-blue-500"></i></button>
                                                         </a>
+                                                        @endif 
+
+                                                        @if ($data->status_permohonan === 'Menunggu')
+                                                        <button id="modal_show_fourth" type="button" data-toggle="modal" data-target="#isimodal" data-id_permohonan="{{ $data->id_permohonan }}" class="py-2 px-[10px] border border-gray-500 rounded bg-red-500 text-white"><i class="fa-solid fa-ban text-white mr-2"></i>Batal</button>
+
+                                                        <div class="modal fade" id="isimodal">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h4 class="modal-title">Ubah Data Instansi</h4>
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                                    </div>
+                                                                    <div class="modal-body" id="tampil_modal">
+                                                                        <form method="post" action="{{ route('user.batalPermohonan') }}">
+                                                                            @csrf
+                                                                            <div class="form-group row m-b-15">
+                                                                                <label class="col-md-5 col-form-label">Status Permohonan <sup class="text-red">*</sup></label>
+                                                                                <div class="col-md-7">
+                                                                                    <input type="text" id="id_permohonan" name="id_permohonan">
+                                                                                    <input required name="status_permohonan" id="status_permohonan" type="text" value="Batal" class="form-control form-input text-small" />
+                                                                                </div>
+                                                                            </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <a href="javascript:;" class="button-ghost" data-dismiss="modal">Tutup</a>
+                                                                        <button type="submit" class="button-primary">Ubah Data</button>
+                                                                    </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                         @endif 
 
                                                         @if ($data->status_permohonan === 'Diterima')
@@ -233,10 +275,10 @@
                         </div>
             
                     </div>
-                    <div class="mt-5">
+                    {{-- <div class="mt-5">
                         <h1 class="font-medium text-lg mb-5">Chart Statistik Permohonan</h1>
                         <canvas id="barChart" height="150px"></canvas>
-                    </div> 
+                    </div>  --}}
                 </div>
                 
                 <div id="profilePage" class="hide">
@@ -248,9 +290,13 @@
                                 <div class="flex flex-col items-start gap-y-1">
                                     <p class="font-medium" style="font-size: 13px">{{ Auth::user()->name }}</p>
                                     <p class="text-neutral-600">User</p>
-                                    <p class="text-neutral-500">{{ Auth::user()->instansi->nama_instansi }}</p>
+                                    @if (Auth::user()->nama_instansi === null)
+                                        <p class="text-neutral-500">{{ Auth::user()->instansi->nama_instansi }}</p>
+                                    @else 
+                                        <p class="text-neutral-500">{{ Auth::user()->nama_instansi }}</p>
+                                    @endif 
                                 </div>
-                                <div class="absolute top-1/2 right-0 transform -translate-y-1/2" id="modal_show" type="button" data-toggle="modal" data-target="#isimodalprofile" data-name="{{ Auth::user()->name }}" data-instansi_id="{{ Auth::user()->instansi_id }}">
+                                <div class="absolute top-1/2 right-0 transform -translate-y-1/2" id="modal_show" type="button" data-toggle="modal" data-target="#isimodalprofile" data-name="{{ Auth::user()->name }}" data-instansi_id="{{ Auth::user()->instansi_id }}" data-nama_instansi="{{ Auth::user()->nama_instansi }}">
                                     <button class="border border-gray-400 py-2 px-3 text-neutral-600 rounded-2xl flex flex-row items-center gap-x-2">
                                         Edit 
                                         <img src="{{ asset('/assets/img/auth/edit.png') }}" class="h-4" />
@@ -287,6 +333,38 @@
                                                             @endforeach
                                                         </select>
                                                     </div>
+
+                                                    @if (Auth::user()->instansi_id === 21)
+                                                        <div class="mt-3" id="instansi">
+                                                            <label class="col-form-label font-semibold">Nama Instansi<sup class="text-red-500">*</sup></label>
+                                                            <div class="block">
+                                                                <input type="text" class="form-control form-input text-small" name="nama_instansi" id="nama_instansi" required />
+                                                            </div>
+                                                        </div>
+                                                    @else
+                                                        <div class="mt-3 hidden" id="instansi">
+                                                            <label class="col-form-label font-semibold">Nama Instansi<sup class="text-red-500">*</sup></label>
+                                                            <div class="block">
+                                                                <input type="text" class="form-control form-input text-small" name="nama_instansi" id="nama_instansi" required />
+                                                            </div>
+                                                        </div>
+                                                    @endif
+
+                                                    {{-- @if (Auth::user()->nama_instansi != null)
+                                                        <div class="mt-3" id="instansi">
+                                                            <label class="col-form-label font-semibold">Nama Instansi<sup class="text-red-500">*</sup></label>
+                                                            <div class="block">
+                                                                <input type="text" class="form-control form-input text-small" name="nama_instansi" id="nama_instansi" />
+                                                            </div>
+                                                        </div>
+                                                    @else 
+                                                        <div class="mt-3 hidden" id="instansi">
+                                                            <label class="col-form-label font-semibold">Nama Instansi<sup class="text-red-500">*</sup></label>
+                                                            <div class="block">
+                                                                <input type="text" class="form-control form-input text-small" name="nama_instansi" id="nama_instansi" />
+                                                            </div>
+                                                        </div>
+                                                    @endif --}}
                                                 </div>
                                         </div>
                                         <div class="modal-footer font-semibold text-sm">
@@ -303,7 +381,7 @@
                             <div class="pt-6">
                                 <div class="flex flex-row items-center justify-between">
                                     <h1 class="font-medium">Personal Information</h1>
-                                    <button class="border border-gray-400 py-2 px-3 text-neutral-600 rounded-2xl flex flex-row items-center gap-x-2" id="modal_show_second" type="button" data-toggle="modal" data-target="#isimodalpersonal" data-name="{{ Auth::user()->name }}" data-email="{{ Auth::user()->email }}" data-no_telp="{{ Auth::user()->no_telp }}" data-alamat="{{ Auth::user()->alamat }}">
+                                    <button class="border border-gray-400 py-2 px-3 text-neutral-600 rounded-2xl flex flex-row items-center gap-x-2" id="modal_show_second" type="button" data-toggle="modal" data-target="#isimodalpersonal" data-name="{{ Auth::user()->name }}" data-email="{{ Auth::user()->email }}" data-no_telp="{{ Auth::user()->no_telp }}" data-nik="{{ Auth::user()->nik }}">
                                         Edit 
                                         <img src="{{ asset('/assets/img/auth/edit.png') }}" class="h-4" />
                                     </button>
@@ -329,8 +407,8 @@
                                         <p class="pt-2">{{ Auth::user()->no_telp }}</p>
                                     </div>
                                     <div class="mt-[20px] lg:mt-0">
-                                        <h3 class="font-medium text-neutral-500">Alamat</h3>
-                                        <p class="pt-2">{{ Auth::user()->alamat }}</p>
+                                        <h3 class="font-medium text-neutral-500">NIK</h3>
+                                        <p class="pt-2">{{ Auth::user()->nik }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -364,9 +442,9 @@
                                                         <input type="text" class="form-control form-input text-small" name="no_telp" id="no_telp"  required />
                                                     </div>
 
-                                                    <label class="col-form-label font-semibold mt-3">Alamat <sup class="text-red-500">*</sup></label>
+                                                    <label class="col-form-label font-semibold mt-3">NIK <sup class="text-red-500">*</sup></label>
                                                     <div class="block">
-                                                        <input type="text" class="form-control form-input text-small" name="alamat" id="alamat"  required />
+                                                        <input type="text" class="form-control form-input text-small" name="nik" id="nik"  required />
                                                     </div>
                                                 </div>
                                         </div>
@@ -394,16 +472,21 @@
     
                                 <div class="pt-3 md:grid md:grid-cols-[40%,1fr] gap-x-3 gap-y-10">
                                     <div class="mt-[20px] lg:mt-0">
-                                        <h3 class="font-medium text-neutral-500">Instansi</h3>
-                                        <p class="pt-2 pr-5">{{ Auth::user()->instansi->nama_instansi }}</p>
+                                        <h3 class="font-medium text-neutral-500">Instansi / Organisasi</h3>
+                                        @if (Auth::user()->nama_instansi === null)
+                                            <p class="pt-2">{{ Auth::user()->instansi->nama_instansi }}</p>
+                                        @else 
+                                            <p class="pt-2">{{ Auth::user()->nama_instansi }}</p>
+                                        @endif 
                                     </div>
                                     <div class="mt-[20px] lg:mt-0">
-                                        <h3 class="font-medium text-neutral-500">Nama Organisasi</h3>
-                                        @if (Auth::user()->nama_organisasi === null)
+                                        <h3 class="font-medium text-neutral-500">Alamat Instansi / Organisasi</h3>
+                                        {{-- @if (Auth::user()->nama_organisasi === null)
                                             <p class="pt-2">-</p>
                                         @else 
                                             <p class="pt-2">{{ Auth::user()->nama_organisasi }}</p>
-                                        @endif 
+                                        @endif  --}}
+                                        <p class="pt-2">{{ Auth::user()->alamat_instansi }}</p>
                                     </div>
                                 </div>
 
@@ -467,21 +550,23 @@
     $(document).on("click", "#modal_show", function() {
         var name = $(this).data('name');
         var instansi_id = $(this).data('instansi_id');
+        var nama_instansi = $(this).data('nama_instansi');
 
         $("#tampil_modal #name").val(name);
         $("#tampil_modal #instansi_id").val(instansi_id);
+        $("#tampil_modal #nama_instansi").val(nama_instansi);
     })
 
     $(document).on("click", "#modal_show_second", function() {
         var name = $(this).data('name');
         var email = $(this).data('email');
         var no_telp = $(this).data('no_telp');
-        var alamat = $(this).data('alamat');
+        var nik = $(this).data('nik');
 
         $("#tampil_modal_second #name").val(name);
         $("#tampil_modal_second #email").val(email);
         $("#tampil_modal_second #no_telp").val(no_telp);
-        $("#tampil_modal_second #alamat").val(alamat);
+        $("#tampil_modal_second #nik").val(nik);
     })
 
     $(document).on("click", "#modal_show_third", function() {
@@ -490,6 +575,12 @@
 
         $("#tampil_modal_third #instansi_id").val(instansi_id);
         $("#tampil_modal_third #nama_organisasi").val(nama_organisasi);
+    })
+
+    $(document).on("click", "#modal_show_fourth", function() {
+        var id_permohonan = $(this).data('id_permohonan');
+
+        $("#tampil_modal #id_permohonan").val(id_permohonan);
     })
 
 
@@ -501,6 +592,16 @@
                 $(this).toggle($(this).text().toLowerCase().indexOf(searchText) > -1);
             });
         });
+    });
+
+    document.getElementById("instansi_id").addEventListener("change", function() {
+        const selectedValue = this.value;
+
+        if (selectedValue == 21) {
+            document.getElementById("instansi").classList.remove('hidden');
+        } else {
+            document.getElementById("instansi").classList.add('hidden');
+        }
     });
 </script>
 

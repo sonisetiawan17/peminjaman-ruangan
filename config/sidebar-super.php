@@ -55,10 +55,10 @@ return [
                     'url' => '/superadmin/blok-ruangan',
                     'title' => 'Blok Ruangan',
                 ],
-                [
-                    'url' => '/superadmin/bidang-kegiatan',
-                    'title' => 'Bidang Kegiatan',
-                ],
+                // [
+                //     'url' => '/superadmin/bidang-kegiatan',
+                //     'title' => 'Bidang Kegiatan',
+                // ],
             ],
         ],
         [

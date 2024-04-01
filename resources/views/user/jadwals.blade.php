@@ -1,12 +1,14 @@
 @extends('layouts.landing')
 
+@section('title', 'Jadwal - Sistem Informasi Peminjaman Ruangan')
+
 @section('content')
 
 @php
 
 $schedule = $jadwal;
 $namaFasilitas = $fasilitas;
-$dataJam = ['8', '9', '10', '11', '12', '13', '14', '15', '16'];
+$dataJam = ['8', '9', '10', '11', '12', '13', '14', '15'];
 $fasilitasArray = $fasilitasWithAlias
 
 @endphp
@@ -60,9 +62,9 @@ $fasilitasArray = $fasilitasWithAlias
                             <ul class="mt-[8px] lg:mt-0 flex flex-wrap lg:items-center gap-y-3 lg:gap-y-0 gap-x-2" id="jam-{{ $fasilitas[1] }}">
                                 @foreach ($dataJam as $jam)
                                     @if (in_array($jam, $newArray[$fasilitas[0]]))
-                                        <li><span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-red-100 text-red-800">{{ $jam }}:00</span></li>
+                                        <li><span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-red-100 text-red-800">{{ $jam }}:{{ $jam == 15 ? '30' : '00' }}</span></li>
                                     @else
-                                        <li><span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-green-100 text-green-800">{{ $jam }}:00</span></li>
+                                        <li><span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-green-100 text-green-800">{{ $jam }}:{{ $jam == 15 ? '30' : '00' }}</span></li>
                                     @endif
                                 @endforeach
                             </ul>
@@ -171,7 +173,7 @@ $fasilitasArray = $fasilitasWithAlias
         const dateValue = dates;
         
         function processRoomSchedule(room, dateValue, abbreviation) {
-            const jadwal = ['8', '9', '10', '11', '12', '13', '14', '15', '16'];
+            const jadwal = ['8', '9', '10', '11', '12', '13', '14', '15'];
 
             const jamTersedia = document.getElementById(`jam-${abbreviation}`);
             jamTersedia.innerHTML = '';
@@ -212,13 +214,13 @@ $fasilitasArray = $fasilitasWithAlias
                 jadwal.forEach(jam => {
                     const found = newArray.includes(jam);
                     const style = found ? 'bg-red-100' : 'bg-green-100';
-                    const displayJam = `<span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium ${style} text-${found ? 'red' : 'green'}-800">${jam}:00</span>`;
+                    const displayJam = `<span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium ${style} text-${found ? 'red' : 'green'}-800">${jam}:${jam == 15 ? '30' : '00'}</span>`;
 
                     jamTersedia.innerHTML += `<li>${displayJam}</li>`;
                 });
             } else {
                 jadwal.forEach(jam => {
-                    jamTersedia.innerHTML += `<span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-green-100 text-${room === 'Aula' ? 'green' : 'blue'}-800">${jam}:00</span>`;
+                    jamTersedia.innerHTML += `<span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-green-100 text-${room === 'Aula' ? 'green' : 'blue'}-800">${jam}:${jam == 15 ? '30' : '00'}</span>`;
                 });
             }
         }

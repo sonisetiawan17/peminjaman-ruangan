@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Sipirang | @yield('title')</title>
+    <title>@yield('title')</title>
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
     <meta content="" name="description" />
     <meta content="" name="author" />
@@ -79,5 +79,19 @@
     </nav>
 
     @yield('content')
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
+        integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    @if (Session::has('sukses'))
+        <script>
+            toastr.success("{!! Session::get('sukses') !!}")
+        </script>
+    @elseif (Session::has('error'))
+        <script>
+            toastr.error("{!! Session::get('error') !!}")
+        </script>
+    @endif
 </body>
 </html>

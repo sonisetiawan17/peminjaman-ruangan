@@ -61,6 +61,15 @@
 
                 <div class="mt-4">
                     <div class="flex items-center">
+                        <x-label for="no_telp" :value="__('No Telepon')" />
+                        <span class="text-red-700">*</span>
+                    </div>
+                    <input id="no_telp" class="auth-form-input" type="text" name="no_telp"
+                        value="{{ old('no_telp') }}" />
+                </div>
+
+                <div class="mt-4">
+                    <div class="flex items-center">
                         <x-label for="instansi_id" :value="__('Instansi')" />
                         <span class="text-red-700">*</span>
                     </div>
@@ -75,7 +84,7 @@
 
                 <div class="mt-4 hidden" id="instansi">
                     <div class="flex items-center">
-                        <x-label for="nama_instansi" :value="__('Nama Instansi')" />
+                        <x-label for="nama_instansi" :value="__('Nama Instansi / Organisasi')" />
                         <span class="text-red-700">*</span>
                     </div>
                     <input id="nama_instansi" class="auth-form-input" type="text" name="nama_instansi"
@@ -84,21 +93,11 @@
 
                 <div class="mt-4">
                     <div class="flex items-center">
-                        <x-label for="no_telp" :value="__('No Telepon')" />
+                        <x-label for="alamat_instansi" :value="__('Alamat Instansi / Organisasi')" />
                         <span class="text-red-700">*</span>
                     </div>
-                    <input id="no_telp" class="auth-form-input" type="text" name="no_telp"
-                        value="{{ old('no_telp') }}" />
-                </div>
-
-                <div class="mt-4">
-                    <div class="flex items-center">
-                        <x-label for="nama_organisasi" :value="__('Nama Organisasi / Pribadi')" />
-                        <span class="text-red-700">*</span>
-                    </div>
-                    {{-- <x-label for="nama_organisasi" :value="__('Nama Organisasi / Pribadi')" /> --}}
-                    <input id="nama_organisasi" class="auth-form-input" type="text" name="nama_organisasi"
-                        value="{{ old('nama_organisasi') }}" />
+                    <input id="alamat_instansi" class="auth-form-input" type="text" name="alamat_instansi"
+                        value="{{ old('alamat_instansi') }}" />
                 </div>
             </div>
 

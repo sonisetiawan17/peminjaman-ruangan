@@ -16,10 +16,10 @@ class Permohonan extends Model
 
     protected $guarded = ['id_permohonan'];
 
-    public function bidang_kegiatan()
-    {
-        return $this->belongsTo(BidangKegiatan::class, 'bidang_id');
-    }
+    // public function bidang_kegiatan()
+    // {
+    //     return $this->belongsTo(BidangKegiatan::class, 'bidang_id');
+    // }
 
     public function user()
     {
@@ -31,10 +31,15 @@ class Permohonan extends Model
         return $this->belongsTo(Instansi::class, 'instansi_id');
     }
 
-    public function alat_pendukung()
+    public function fasilitas()
     {
-        return $this->belongsTo(AlatPendukung::class, 'id_alat');
+        return $this->belongsTo(Fasilitas::class, 'fasilitas_id');
     }
+
+    // public function alat_pendukung()
+    // {
+    //     return $this->belongsTo(AlatPendukung::class, 'alat_id');
+    // }
 
     public function jadwal()
     {

@@ -59,7 +59,7 @@ class CRUDController extends Controller
         $jadwal = DB::table('permohonan')
                     ->join('jadwal', 'jadwal.permohonan_id', '=', 'permohonan.id_permohonan')
                     ->join('users', 'users.id', '=', 'permohonan.user_id')
-                    ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.id_fasilitas')
+                    ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.fasilitas_id')
                     ->whereDate('tgl_mulai', '>=', $currentDate)
                     ->get();
 
@@ -93,7 +93,7 @@ class CRUDController extends Controller
         $currentJadwal = DB::table('permohonan')
                             ->join('jadwal', 'jadwal.permohonan_id', '=', 'permohonan.id_permohonan')
                             ->join('users', 'users.id', '=', 'permohonan.user_id')
-                            ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.id_fasilitas')
+                            ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.fasilitas_id')
                             ->where('tgl_mulai', '=', $currentDate)
                             ->get();
 
@@ -205,12 +205,16 @@ class CRUDController extends Controller
             $nama_fasilitas = $request->nama_fasilitas;
             $kapasitas = $request->kapasitas;
             $lokasi = $request->lokasi;
+            $fasilitas = $request->fasilitas;
+            $waktu_pemanfaatan = $request->waktu_pemanfaatan;
 
             if ($file->move($uploadPath, $rename)) {
                 $media = new Fasilitas();
                 $media->nama_fasilitas = $nama_fasilitas;
                 $media->kapasitas = $kapasitas;
                 $media->lokasi = $lokasi;
+                $media->fasilitas = $fasilitas;
+                $media->waktu_pemanfaatan = $waktu_pemanfaatan;
                 $media->nama = $originalName;
                 $media->file = $rename;
                 $media->extension = $extension;
@@ -225,12 +229,12 @@ class CRUDController extends Controller
 
             return redirect()
                 ->back()
-                ->with('sukses', 'Error, file tidak dapat di upload');
+                ->with('error', 'Error, file tidak dapat di upload');
         }
 
         return redirect()
             ->back()
-            ->with('sukses', 'Error, tidak ada file ditemukan');
+            ->with('error', 'Error, tidak ada file ditemukan');
     }
 
     public function ubah_fasilitas(Request $request)
@@ -256,6 +260,8 @@ class CRUDController extends Controller
             $nama_fasilitas = $request->nama_fasilitas;
             $kapasitas = $request->kapasitas;
             $lokasi = $request->lokasi;
+            $fasilitas = $request->fasilitas;
+            $waktu_pemanfaatan = $request->waktu_pemanfaatan;
 
             if ($file->move($uploadPath, $rename)) {
                 $id_fasilitas = $request->id_fasilitas;
@@ -263,6 +269,8 @@ class CRUDController extends Controller
                 $fasilitas->nama_fasilitas = $nama_fasilitas;
                 $fasilitas->kapasitas = $kapasitas;
                 $fasilitas->lokasi = $lokasi;
+                $fasilitas->fasilitas = $fasilitas;
+                $fasilitas->waktu_pemanfaatan = $waktu_pemanfaatan;
                 $fasilitas->nama = $originalName;
                 $fasilitas->file = $rename;
                 $fasilitas->extension = $extension;
@@ -362,15 +370,19 @@ class CRUDController extends Controller
 
         $data->name = $request->name;
         $data->email = $request->email;
-        $data->password = Hash::make($request->password);
-        $simpan = $data->update();
+        
+        if ($request->password !== null) {
+            $data->password = Hash::make($request->password);
+        }
+
+        $data->update();
 
         $data->assignRole('admin');
 
         if ($user == 'Admin') {
-            return redirect('admin/users')->with('sukses', 'Data Berhasil diubah!');
+            return redirect('admin/admin')->with('sukses', 'Data Berhasil diubah!');
         } elseif ($user == 'Super Admin') {
-            return redirect('superadmin/users')->with('sukses', 'Data Berhasil diubah!');
+            return redirect('superadmin/admin')->with('sukses', 'Data Berhasil diubah!');
         }
     }
 
@@ -464,11 +476,13 @@ class CRUDController extends Controller
         $data->id = $user_id;
         $data->name = $request->name;
         $data->email = $request->email;
-        $data->instansi_id = $request->instansi_id;
         $data->nik = $request->nik;
         $data->no_telp = $request->no_telp;
-        $data->alamat = $request->alamat;
-        $data->nama_organisasi = $request->nama_organisasi;
+        
+        if ($request->password !== null) {
+            $data->password = Hash::make($request->password);
+        }
+
         $data->update();
 
         if ($user == 'Admin') {
@@ -497,7 +511,6 @@ class CRUDController extends Controller
         $data = new Instansi();
         $user = auth::user()->name;
         $data->nama_instansi = $request->nama_instansi;
-        $data->alamat_instansi = $request->alamat_instansi;
         $data->save();
 
         if ($user == 'Admin') {
@@ -526,7 +539,6 @@ class CRUDController extends Controller
         $user = auth::user()->name;
         $data = Instansi::find($id_instansi);
         $data->nama_instansi = $request->nama_instansi;
-        $data->alamat_instansi = $request->alamat_instansi;
         $data->update();
 
         if ($user == 'Admin') {
@@ -613,7 +625,7 @@ class CRUDController extends Controller
 
         $jadwal = DB::table('permohonan')
                     ->join('jadwal', 'jadwal.permohonan_id', '=', 'permohonan.id_permohonan')
-                    ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.id_fasilitas')
+                    ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.fasilitas_id')
                     ->select('fasilitas.id_fasilitas', 'nama_fasilitas', 'tgl_mulai', 'tgl_selesai')
                     ->get();
             
@@ -666,12 +678,13 @@ class CRUDController extends Controller
     {
         $id_blok_ruangan = $request->id_blok_ruangan;
         $user = auth::user()->name;
-        $data = BidangKegiatan::find($id_blok_ruangan);
+        $data = BlokRuangan::find($id_blok_ruangan);
+
         $data->tgl_mulai = $request->tgl_mulai;
         $data->tgl_selesai = $request->tgl_selesai;
         $data->keterangan = $request->keterangan;
         $data->fasilitas_id = $request->fasilitas_id;
-        $simpan = $data->update();
+        $data->update();
 
         if ($user == 'Admin') {
             return redirect('admin/blok-ruangan')->with('sukses', 'Data Berhasil diubah!');
@@ -745,11 +758,8 @@ class CRUDController extends Controller
 
         $permohonan = DB::table('permohonan')
             ->join('users', 'users.id', '=', 'permohonan.user_id')
-            ->join('bidang_kegiatan', 'bidang_kegiatan.id_bidang_kegiatan', '=', 'permohonan.bidang_id')
-            ->join('instansi', 'instansi.id_instansi', '=', 'permohonan.instansi_id')
             ->join('jadwal', 'jadwal.permohonan_id', '=', 'permohonan.id_permohonan')
-            ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.id_fasilitas')
-            ->join('alat_pendukung', 'alat_pendukung.id_alat_pendukung', '=', 'permohonan.id_alat')
+            ->join('fasilitas', 'fasilitas.id_fasilitas', '=', 'permohonan.fasilitas_id')
             ->get();
 
         return view('super-admin.histori-permohonan', compact('permohonan'));
@@ -758,16 +768,19 @@ class CRUDController extends Controller
     public function lihat_permohonan($id_permohonan)
     {
         $permohonan = Permohonan::find($id_permohonan);
-        $data = DB::table('permohonan')
-                    ->join('jadwal', 'jadwal.permohonan_id', '=', 'permohonan.id_permohonan')
-                    ->join('alat_pendukung', 'alat_pendukung.id_alat_pendukung', '=', 'permohonan.id_alat')
-                    ->join('users', 'users.id', '=', 'permohonan.user_id')
-                    ->join('bidang_kegiatan', 'bidang_kegiatan.id_bidang_kegiatan', '=', 'permohonan.bidang_id')
-                    ->join('instansi', 'instansi.id_instansi', '=', 'permohonan.instansi_id')
-                    ->where('permohonan.id_permohonan', '=', $id_permohonan)
-                    ->first();
+
+        $user = Permohonan::join('users','users.id','=','permohonan.user_id')
+                            ->join('jadwal','jadwal.permohonan_id','permohonan.id_permohonan')
+                            ->where('permohonan.id_permohonan',$id_permohonan)
+                            ->select('*','permohonan.created_at as dibuat','permohonan.updated_at as diubah')
+                            ->first();
+
+        $data = Permohonan::find($id_permohonan)
+                                ->join('jadwal', 'jadwal.permohonan_id', '=', 'permohonan.id_permohonan')
+                                ->select('*','permohonan.created_at as dibuat','permohonan.updated_at as diubah')
+                                ->first();
                     
-        return view('super-admin.lihat-permohonan', compact('permohonan', 'data'));
+        return view('super-admin.lihat-permohonan', compact('permohonan', 'data', 'user'));
     }
 
     public function hapus_permohonan($id_permohonan)

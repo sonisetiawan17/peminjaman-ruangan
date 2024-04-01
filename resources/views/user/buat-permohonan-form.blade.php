@@ -1,6 +1,6 @@
 @extends('layouts.landing')
 
-@section('title', 'Buat Permohonan')
+@section('title', 'Buat Permohonan - Sistem Informasi Peminjaman Ruangan')
 
 @section('content')
 
@@ -64,14 +64,7 @@
                         <div class="w-full">
                             <label class="col-form-label font-medium">Bidang Kegiatan<sup class="text-red-500">*</sup></label>
                             <div class="block">
-                                <input type="text" class="form-control form-input text-small" name="bidang_id" id="bidang_id" />
-                                {{-- <select class="w-full text-xs rounded-sm border border-gray-300" id="bidang_id" name="bidang_id">
-                                    <option value="" disabled selected>-- Pilih Bidang Kegiatan --</option>
-                                    @foreach ($bidang as $b)
-                                            <option value="{{ $b->id_bidang_kegiatan }}">{{ $b->nama_bidang }}
-                                            </option>
-                                    @endforeach
-                                </select> --}}
+                                <input type="text" class="form-control form-input text-small" name="bidang_kegiatan" id="bidang_kegiatan" />
                             </div>
                         </div>
                     </div>
@@ -104,12 +97,12 @@
                                 <input type="text" class="form-control form-input text-small" name="no_telp" id="no_telp" value="{{ Auth::user()->no_telp }}" disabled />
                             </div>
                         </div>
-                        {{-- <div class="w-full mt-3">
-                            <label class="col-form-label font-medium">Alamat Lengkap<sup class="text-red-500">*</sup></label>
+                        <div class="w-full mt-3">
+                            <label class="col-form-label font-medium">Email<sup class="text-red-500">*</sup></label>
                             <div class="block">
-                                <input type="text" class="form-control form-input text-small" name="alamat" id="alamat" value="{{ Auth::user()->alamat }}" disabled />
+                                <input type="text" class="form-control form-input text-small" name="email" id="email" value="{{ Auth::user()->email }}" disabled />
                             </div>
-                        </div> --}}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -122,16 +115,16 @@
                         <div class="w-full">
                             <label class="col-form-label font-medium">Nama Instansi / Pribadi <sup class="text-red-500">*</sup></label>
                             <div class="block">
-                                <select class="w-full text-xs rounded-sm border border-gray-300" id="instansiSelect" name="instansi_id" required>
-                                    <option value="" disabled selected>-- Pilih Instansi --</option>
-                                    @foreach ($instansi as $i)
-                                            <option value="{{ $i->id_instansi }}">{{ $i->nama_instansi }}
-                                            </option>
-                                    @endforeach
-                                </select>
+                                <input type="text" class="form-control form-input text-small" name="instansi_id" id="instansi_id" value="{{ Auth::user()->instansi_id === 21 ? Auth::user()->nama_instansi : Auth::user()->instansi->nama_instansi }}" required disabled />
                             </div>
                         </div>
                         <div class="w-full">
+                            <label class="col-form-label font-medium">Alamat Instansi / Pribadi<sup class="text-red-500">*</sup></label>
+                            <div class="block">
+                                <input type="text" class="form-control form-input text-small" name="alamat_instansi" id="alamat_instansi" value="{{ Auth::user()->alamat_instansi }}" required disabled />
+                            </div>
+                        </div>
+                        <div class="w-full mt-3">
                             <label class="col-form-label font-medium">Status dalam Instansi / Pribadi<sup class="text-red-500">*</sup></label>
                             <div class="block">
                                 <input type="text" class="form-control form-input text-small" name="status_instansi" id="status_instansi" required />
@@ -141,12 +134,6 @@
                             <label class="col-form-label font-medium">Bidang Instansi / Pribadi<sup class="text-red-500">*</sup></label>
                             <div class="block">
                                 <input type="text" class="form-control form-input text-small" name="bidang_instansi" id="bidang_instansi" required />
-                            </div>
-                        </div>
-                        <div class="w-full mt-3">
-                            <label class="col-form-label font-medium">Alamat Instansi / Pribadi<sup class="text-red-500">*</sup></label>
-                            <div class="block">
-                                <input type="text" class="form-control form-input text-small" name="alamat_instansi" id="valAlamat" required disabled />
                             </div>
                         </div>
                     </div>
@@ -263,7 +250,8 @@
             </div>
         </form>
         <div class="hidden md:block bg-white rounded-xl mx-4 h-fit mt-[60px]" style="box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;">
-            <div class="h-44 w-full bg-cover bg-center rounded-t-xl" style="background-image: url('/foto_fasilitas/{{ $file }}');"></div>
+            {{-- <div class="h-44 w-full bg-cover bg-center rounded-t-xl" style="background-image: url('/foto_fasilitas/{{ $file }}');"></div> --}}
+            <div class="h-44 w-full bg-cover bg-center rounded-t-xl" style="background-image: url('{{ $file }}');"></div>
             <div class="p-4">
                 <h1 class="font-semibold text-lg border-b border-neutral-300 pb-4">{{ $nama_fasilitas }}</h1>
                 <div class="pt-4 pb-2 text-neutral-500 font-medium">
@@ -377,30 +365,8 @@
 
 
 <script>
-    document.getElementById('instansiSelect').addEventListener('change', function() {
-        let selectedValue = this.value;
-
-        let inputValue = '';
-
-        switch (selectedValue) {
-            case '1':
-                inputValue = 'Cimahi Utara';
-                break;
-            case '2':
-                inputValue = 'Cimahi Tengah';
-                break;
-            case '3':
-                inputValue = 'Cimahi Selatan';
-                break;
-            default:
-                inputValue = '';
-        }
-
-        document.getElementById('valAlamat').value = inputValue;
-    });
-
     const skpd = document.getElementById("skpd");
-    const bidang = document.getElementById("bidang_id");
+    const bidang = document.getElementById("bidang_kegiatan");
     const button = document.getElementById("btn-next");
 
     function stepOneValidation(userSkpd, userBidang) {
@@ -449,10 +415,10 @@
 
     // ================================================
 
-    const instansi = document.getElementById("instansiSelect");
+    const instansi = document.getElementById("instansi_id");
     const statusInstansi = document.getElementById("status_instansi");
     const bidangInstansi = document.getElementById("bidang_instansi");
-    const alamatInstansi = document.getElementById("valAlamat");
+    const alamatInstansi = document.getElementById("alamat_instansi");
     const buttonNext = document.getElementById("btn-step-one");
     
     function stepTwoValidation(userInstansi, userStatusInstansi, userBidangInstansi, userAlamatInstansi) {

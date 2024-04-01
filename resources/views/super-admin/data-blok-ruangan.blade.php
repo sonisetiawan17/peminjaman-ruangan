@@ -81,7 +81,9 @@
                                     <td>
                                         <div class="btn-group">
                                             <a id="modal_show" href="#" type="button" data-toggle="modal"
-                                                data-target="#isimodal" data-fasilitas_id="{{ $i->fasilitas_id }}"
+                                                data-target="#isimodal" 
+                                                data-id_blok_ruangan="{{ $i->id_blok_ruangan }}"
+                                                data-fasilitas_id="{{ $i->fasilitas_id }}"
                                                 data-tgl_mulai="{{ $i->tgl_mulai }}"
                                                 data-tgl_selesai="{{ $i->tgl_selesai }}"
                                                 data-keterangan="{{ $i->keterangan }}" class="btn btn-white"><i

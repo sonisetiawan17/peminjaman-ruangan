@@ -157,7 +157,15 @@
                             </div>
                             <label class="col-md-5 col-form-label mt-3">Lokasi <sup class="text-red">*</sup></label>
                             <div class="col-md-7 mt-3">
-                                <input type="text" name="lokasi" class="form-control form-input text-small" placeholder="Contoh: Lt.4" required />
+                                <input type="text" name="lokasi" class="form-control form-input text-small" placeholder="Contoh: Lantai 2" required />
+                            </div>
+                            <label class="col-md-5 col-form-label mt-3">Fasilitas <sup class="text-red">*</sup></label>
+                            <div class="col-md-7 mt-3">
+                                <input type="text" name="fasilitas" class="form-control form-input text-small" required />
+                            </div>
+                            <label class="col-md-5 col-form-label mt-3">Waktu Pemanfaatan <sup class="text-red">*</sup></label>
+                            <div class="col-md-7 mt-3">
+                                <input type="text" name="waktu_pemanfaatan" class="form-control form-input text-small" placeholder="Senin - Jum'at" required />
                             </div>
                         </div>
                 </div>

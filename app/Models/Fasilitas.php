@@ -13,15 +13,15 @@ class Fasilitas extends Model
 
     protected $primaryKey = 'id_fasilitas';
 
-    protected $fillable = ['nama_fasilitas', 'kapasitas', 'lokasi', 'file', 'nama', 'extension', 'size', 'mime'];
+    protected $guarded = ['id'];
 
     public function blok_ruangan()
     {
         return $this->hasMany(BlokRuangan::class, 'fasilitas_id');
     }
 
-    // public function permohonan()
-    // {
-    //     return $this->hasMany(Permohonan::class, 'fasiltias_id');
-    // }
+    public function permohonan()
+    {
+        return $this->hasMany(Permohonan::class, 'fasilitas_id');
+    }
 }

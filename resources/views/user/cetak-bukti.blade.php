@@ -94,7 +94,7 @@
       <table>
         <tr><td>Nama Pemohon</td><td>:</td><td>{{ $data->name }}</td></tr>
         <tr><td>SKPD</td><td>:</td><td>{{ $data->skpd }}</td></tr>
-        <tr><td>Nama Instansi</td><td>:</td><td>{{ $data->nama_instansi }}</td></tr>
+        <tr><td>Nama Instansi</td><td>:</td><td>{{ $data->user->instansi_id === 21 ? $data->user->nama_instansi : $data->user->instansi->nama_instansi }}</td></tr>
         <tr><td>Nama Kegiatan</td><td>:</td><td>{{ $data->nama_kegiatan }}</td></tr>
       </table>
       <hr>

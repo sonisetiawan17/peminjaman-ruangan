@@ -69,7 +69,7 @@
                                 <tr>
                                     <td>{{ $no++ }}</td>
                                     <td>{{ $i->name }}</td>
-                                    <td>{{ $i->instansi->nama_instansi }}</td>
+                                    <td>{{ $i->instansi_id === 21 ? $i->nama_instansi : $i->instansi->nama_instansi }}</td>
                                     <td>{{ $i->email }}</td>
                                     <td>{{ $i->no_telp }}</td>
                                     <td>{{ $i->nik }}</td>
@@ -82,7 +82,7 @@
                                                 data-target="#isimodal" data-id="{{ $i->id }}" data-name="{{ $i->name }}"
                                                 data-email="{{ $i->email }}" data-instansi_id="{{ $i->instansi_id }}"
                                                 data-nik="{{ $i->nik }}" data-no_telp="{{ $i->no_telp }}"
-                                                data-alamat="{{ $i->alamat }}"
+                                                data-alamat_instansi="{{ $i->alamat_instansi }}"
                                                 data-nama_organisasi="{{ $i->nama_organisasi }}" class="btn btn-white"><i
                                                     class="fa fa-edit text-blue"></i></a>
 
@@ -120,22 +120,12 @@
                             <label class="col-md-4 col-form-label">Nama <sup class="text-red">*</sup></label>
                             <div class="col-md-8">
                                 <input required id="name" name="name" type="text"
-                                    class="form-control form-input text-small" />
-                            </div>
-
-                            <label class="col-md-4 col-form-label mt-3">Instansi <sup class="text-red">*</sup></label>
-                            <div class="col-md-8 mt-3">
-                                <select class="form-input w-full text-small" id="instansi_id" name="instansi_id" required>
-                                    <option value="" disabled selected>-- Pilih Instansi --</option>
-                                    @foreach ($instansi as $data)
-                                        <option value="{{ $data->id_instansi }}">{{ $data->nama_instansi }}</option>
-                                    @endforeach
-                                </select>
+                                    class="form-control form-input text-small"/>
                             </div>
 
                             <label class="col-md-4 col-form-label mt-3">Email <sup class="text-red">*</sup></label>
                             <div class="col-md-8 mt-3">
-                                <input required id="email" name="email" type="text"
+                                <input required id="email" name="email" type="email"
                                     class="form-control form-input text-small" />
                             </div>
 
@@ -151,17 +141,10 @@
                                     class="form-control form-input text-small" />
                             </div>
 
-                            <label class="col-md-4 col-form-label mt-3">Alamat <sup class="text-red">*</sup></label>
+                            <label class="col-md-4 col-form-label mt-3">New Password </label>
                             <div class="col-md-8 mt-3">
-                                <input required id="alamat" name="alamat" type="text"
-                                    class="form-control form-input text-small" />
-                            </div>
-
-                            <label class="col-md-4 col-form-label mt-3">Nama Organisasi <sup
-                                    class="text-red">*</sup></label>
-                            <div class="col-md-8 mt-3">
-                                <input required id="nama_organisasi" name="nama_organisasi" type="text"
-                                    class="form-control form-input text-small" />
+                                <input id="password" name="password" type="text"
+                                    class="form-control form-input text-small" placeholder="Optional" />
                             </div>
                         </div>
                 </div>
@@ -186,7 +169,7 @@
             var instansi_id = $(this).data('instansi_id');
             var nik = $(this).data('nik');
             var no_telp = $(this).data('no_telp');
-            var alamat = $(this).data('alamat');
+            var alamat_instansi = $(this).data('alamat_instansi');
             var nama_organisasi = $(this).data('nama_organisasi');
 
             $("#tampil_modal #id").val(id);
@@ -195,7 +178,7 @@
             $("#tampil_modal #instansi_id").val(instansi_id);
             $("#tampil_modal #nik").val(nik);
             $("#tampil_modal #no_telp").val(no_telp);
-            $("#tampil_modal #alamat").val(alamat);
+            $("#tampil_modal #alamat_instansi").val(alamat_instansi);
             $("#tampil_modal #nama_organisasi").val(nama_organisasi);
         })
     </script>

@@ -1,5 +1,7 @@
 @extends('layouts.landing')
 
+@section('title', 'Edit Permohonan - Sistem Informasi Peminjaman Ruangan')
+
 @section('content')
 
 @php 
@@ -20,7 +22,8 @@
                             <div class="bg-white rounded-xl p-4" style="box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;">
                                 <h1 class="font-semibold text-center">Ruangan dan Jadwal</h1>
                                 <div class="lg:grid lg:grid-cols-2 gap-x-6 mt-5">
-                                    <img src="/foto_fasilitas/{{ $permohonan->file }}" class="w-full md:w-1/3 lg:w-full lg:h-[120px] xl:h-[170px] bg-center rounded-xl" />
+                                    <img src="{{ $permohonan->file }}" class="w-full md:w-1/3 lg:w-full lg:h-[120px] xl:h-[170px] bg-center rounded-xl" />
+                                    {{-- <img src="/foto_fasilitas/{{ $permohonan->file }}" class="w-full md:w-1/3 lg:w-full lg:h-[120px] xl:h-[170px] bg-center rounded-xl" /> --}}
                                     <div class="flex flex-col justify-center mt-[15px] lg:mt-0 text-xs">
                                         <h1 class="font-semibold text-[15px] border-b border-neutral-300 pb-[10px] lg:pb-[16px]">{{ $permohonan->nama_fasilitas }}</h1>
                                         <div class="pt-[10px] lg:pt-[16px] pb-2 text-neutral-500 font-medium">
@@ -139,14 +142,7 @@
                                     <div class="w-full mt-[12px] lg:mt-0">
                                         <label class="col-form-label font-medium">Bidang Kegiatan<sup class="text-red-500">*</sup></label>
                                         <div class="block">
-                                            <select class="w-full text-xs rounded-sm border border-gray-300" id="bidang_id" name="bidang_id" value="{{ old('bidang_id', $permohonan->bidang_id) }}">
-                                                <option value="" disabled selected>-- Pilih Bidang SKPD --</option>
-                                                @foreach ($bidang as $item)
-                                                    <option value="{{ $item->id_bidang_kegiatan }}" {{ $permohonan->bidang_id == $item->id_bidang_kegiatan ? 'selected' : '' }}>
-                                                        {{ $item->nama_bidang }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
+                                            <input type="text" class="form-control form-input text-small" name="bidang_kegiatan" id="bidang_kegiatan" value="{{ old('bidang_kegiatan', $permohonan->bidang_kegiatan) }}" />
                                         </div>
                                     </div>
                                 </div>
@@ -180,9 +176,9 @@
                                         </div>
                                     </div>
                                     <div class="w-full mt-3">
-                                        <label class="col-form-label font-medium">Alamat Lengkap<sup class="text-red-500">*</sup></label>
+                                        <label class="col-form-label font-medium">Email<sup class="text-red-500">*</sup></label>
                                         <div class="block">
-                                            <input type="text" class="form-control form-input text-small" name="alamat" id="alamat" value="{{ Auth::user()->alamat }}" disabled />
+                                            <input type="text" class="form-control form-input text-small" name="email" id="email" value="{{ Auth::user()->email }}" disabled />
                                         </div>
                                     </div>
                                 </div>
@@ -342,11 +338,16 @@
                                     <div class="block mt-2">
                                         <div class="flex gap-x-6">
                                             @foreach ($alat as $item)
-                                            <div class="flex">
+                                            {{-- <div class="flex">
                                               <input type="checkbox" class="shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" name="id_alat[]" value="{{ $item->id_alat_pendukung }}"
-                                              id="alat_pendukung" {{ old('id_alat', $permohonan->id_alat) ? 'checked' : '' }}>
+                                              id="alat_pendukung" {{ old('alat_id', $permohonan->alat_id) ? 'checked' : '' }}>
                                               <label for="hs-checkbox-group-1" class="text-sm text-gray-500 ms-3">{{ $item->nama_alat }}</label>
-                                            </div>
+                                            </div> --}}
+                                            <div class="flex">
+                                                <input type="checkbox" class="shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" name="id_alat[]" value="{{ $item->id_alat_pendukung }}"
+                                                id="alat_pendukung">
+                                                <label for="hs-checkbox-group-1" class="text-sm text-gray-500 ms-3">{{ $item->nama_alat }}</label>
+                                              </div>
                                             @endforeach
                                         </div>
                                     </div>
@@ -430,7 +431,7 @@
             jam.innerHTML = '';
 
             if (isDateInCurrentDate) {
-                for (let i = 8; i <= 16; i++) {
+                for (let i = 8; i <= 15; i++) {
                     const value = i.toString();
                     const isUsed = newArray.includes(value);
                     const labelClass = isUsed
@@ -440,7 +441,7 @@
                     jam.innerHTML +=
                         `<label class="${labelClass} mr-1" id="${value}-jam_mulai">
                             <input type="radio" name="jam_mulai" value="${value}" id="${value}" onclick="getValue()" ${isUsed ? 'disabled' : ''} required />
-                            ${value}:00
+                            ${value}:${value == 15 ? '30' : '00'}
                         </label>`;
                 }
             } 
@@ -452,12 +453,12 @@
 
             jam.innerHTML = '';
 
-            for (let i = 8; i <= 16; i++) {
+            for (let i = 8; i <= 15; i++) {
                 const value = i.toString();
                 jam.innerHTML +=
                     `<label class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-teal-100 text-teal-800 cursor-pointer mr-1" id="${value}-jam_mulai">
                         <input type="radio" name="jam_mulai" value="${value}" id="${value}" onclick="getValue()" required />
-                        ${value}:00
+                        ${value}:${value == 15 ? '30' : '00'}
                     </label>`;
             }
         }
@@ -468,12 +469,12 @@
     function getValue() {
         const radioButton = document.getElementsByName("jam_mulai");
 
-        for (let i = 8; i <= 16; i++) {
+        for (let i = 8; i <= 15; i++) {
             const value = i.toString();
             const labelElement = document.getElementById(`${value}-jam_mulai`);
 
             if (radioButton[i - 8].checked && labelElement.classList.contains('cursor-pointer')) {
-                for (let j = 8; j <= 16; j++) {
+                for (let j = 8; j <= 15; j++) {
                     const currentLabel = document.getElementById(`${j}-jam_mulai`);
                     currentLabel.style.backgroundColor = (i === j) ? '#99f6e4' : '';
                 }
@@ -543,7 +544,7 @@
             jam.innerHTML = '';
 
             if (isDateInCurrentDate) {
-                for (let i = 8; i <= 16; i++) {
+                for (let i = 8; i <= 15; i++) {
                     const value = i.toString();
                     const isUsed = newArray.includes(value);
                     const labelClass = isUsed
@@ -553,7 +554,7 @@
                     jam.innerHTML +=
                         `<label class="${labelClass} mr-1" id="${value}-jam_selesai">
                             <input type="radio" name="jam_selesai" value="${value}" id="${value}" onclick="getValueSelesai()" ${isUsed ? 'disabled' : ''} required />
-                            ${value}:00
+                            ${value}:${value == 15 ? '30' : '00'}
                         </label>`;
                 }
             } 
@@ -565,12 +566,12 @@
 
             jam.innerHTML = '';
 
-            for (let i = 8; i <= 16; i++) {
+            for (let i = 8; i <= 15; i++) {
                 const value = i.toString();
                 jam.innerHTML +=
                     `<label class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-teal-100 text-teal-800 cursor-pointer mr-1" id="${value}-jam_selesai">
                         <input type="radio" name="jam_selesai" value="${value}" id="${value}" onclick="getValueSelesai()" required />
-                        ${value}:00
+                        ${value}:${value == 15 ? '30' : '00'}
                     </label>`;
             }
         }
@@ -581,12 +582,12 @@
     function getValueSelesai() {
         const radioButton = document.getElementsByName("jam_selesai");
 
-        for (let i = 8; i <= 16; i++) {
+        for (let i = 8; i <= 15; i++) {
             const value = i.toString();
             const labelElement = document.getElementById(`${value}-jam_selesai`);
 
             if (radioButton[i - 8].checked && labelElement.classList.contains('cursor-pointer')) {
-                for (let j = 8; j <= 16; j++) {
+                for (let j = 8; j <= 15; j++) {
                     const currentLabel = document.getElementById(`${j}-jam_selesai`);
                     currentLabel.style.backgroundColor = (i === j) ? '#99f6e4' : '';
                 }

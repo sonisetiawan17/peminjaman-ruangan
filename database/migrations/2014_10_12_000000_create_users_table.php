@@ -24,7 +24,7 @@ class CreateUsersTable extends Migration
             $table->string('nik')->nullable()->unique();
             $table->string('no_telp')->nullable();
             $table->string('nama_instansi')->nullable();
-            $table->string('nama_organisasi')->nullable();
+            $table->string('alamat_instansi')->nullable();
             $table->string('tipe')->nullable();
             $table->timestamps();
 

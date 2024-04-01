@@ -29,6 +29,7 @@ Route::middleware(['auth', 'role:user'])
         Route::get('/jadwal/{tanggal}', [UserDashboardController::class, 'ambilJadwal'])->name('ambilJadwal');
         Route::get('/buatPermohonan', [UserDashboardController::class, 'buatPermohonan'])->name('buatPermohonan');
         Route::get('/buatPermohonan/form', [UserDashboardController::class, 'buatPermohonanForm'])->name('buatPermohonanForm');
+        Route::post('/batalPermohonan', [UserDashboardController::class, 'batalPermohonan'])->name('batalPermohonan');
         Route::get('/editPermohonan/{id_permohonan}', [UserDashboardController::class, 'editPermohonan'])->name('editPermohonan');
         Route::post('/updatePermohonan/{id_permohonan}', [UserDashboardController::class, 'updatePermohonan'])->name('updatePermohonan');
         Route::post('/simpanPermohonan', [UserDashboardController::class, 'simpanPermohonan'])->name('simpanPermohonan');
@@ -56,6 +57,7 @@ Route::middleware(['auth', 'role:admin'])
     ->name('admin.')
     ->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('index');
+        Route::get('/dashboard/filter', [AdminDashboardController::class, 'filter'])->name('dashboard.filter');
         Route::get('/dataPemohon', [AdminDashboardController::class, 'dataPemohon'])->name('dataPemohon');
         Route::get('/lihatPemohon/{id_permohonan}', [AdminDashboardController::class, 'show'])->name('show');
 
@@ -116,6 +118,7 @@ Route::middleware(['auth', 'role:super-admin'])
         Route::get('/buat-permohonan', [SuperAdminDashboardController::class, 'buatPermohonan'])->name('buatPermohonan');
         Route::post('/simpanPermohonan', [SuperAdminDashboardController::class, 'simpanPermohonan'])->name('simpanPermohonan');
         Route::get('/history', [CRUDController::class, 'history_permohonan'])->name('history_permohonan');
+        Route::get('/history/filter', [SuperAdminDashboardController::class, 'filter_history'])->name('history.filter');
         Route::get('/lihat-permohonan/{id_permohonan}', [CRUDController::class, 'lihat_permohonan'])->name('lihat_permohonan');
         Route::delete('/destroy/{id_permohonan}', [CRUDController::class, 'hapus_permohonan'])->name('hapus_permohonan');
         Route::post('/accPermohonan', [SuperAdminDashboardController::class, 'terima_permohonan'])->name('terima_permohonan');
